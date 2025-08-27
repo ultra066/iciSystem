@@ -41,7 +41,7 @@ class AdminAttendanceView(ft.View):
         ]
 
     def create_attendance_table(self):
-        return ft.DataTable(
+        self.attendance_table = ft.DataTable(
             columns=[
                 ft.DataColumn(ft.Text("Name")),
                 ft.DataColumn(ft.Text("Date")),
@@ -51,6 +51,7 @@ class AdminAttendanceView(ft.View):
             ],
             rows=[]
         )
+        return self.attendance_table
 
     def did_mount(self):
         self.load_attendance_data()
@@ -63,11 +64,10 @@ class AdminAttendanceView(ft.View):
                                             .join(Employee)
                                             .order_by(Attendance.date.desc()))
             
-            table = self.controls[0].controls[1].controls[2]
-            table.rows.clear()
+            self.attendance_table.rows.clear()
             
             for record in attendance_records:
-                table.rows.append(
+                self.attendance_table.rows.append(
                     ft.DataRow(
                         cells=[
                             ft.DataCell(ft.Text(record.employee.name)),
