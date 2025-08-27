@@ -1,0 +1,6 @@
+flet
+PyQt5
+qrcode
+pyzbar
+peewee
+bcrypt
