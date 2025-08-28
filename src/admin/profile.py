@@ -2,6 +2,7 @@ import flet as ft
 from database import db
 from models.admin import Admin
 from auth import check_admin_credentials, initialize_admin
+from components.navigation import AdminNavigation
 import bcrypt
 import time
 
@@ -14,7 +15,7 @@ class AdminProfileView(ft.View):
         super().__init__()
         self.page = page
         self.route = "/admin/profile"
-        self.page.bgcolor = "transparent"
+        self.page.bgcolor = "#F0F2F5"
         self.admin_user = self.get_admin_user()
 
         self.name_value = ft.Text(self.admin_user.username, size=18)
@@ -50,86 +51,91 @@ class AdminProfileView(ft.View):
 
         self.controls = [
             ft.Row(
-                [                    
-                    ft.Column(
-                        [
-                            ft.Text("Admin Profile", size=36, weight="bold"),
-                            ft.Container(
-                                content=ft.Column(
-                                    [
-                                        # Large centered profile icon
-                                        ft.Container(
-                                            content=profile_icon,
-                                            alignment=ft.alignment.center,
-                                            padding=ft.padding.only(bottom=20)
-                                        ),
-                                        
-                                        # Name field
-                                        ft.Row(
-                                            [
-                                                ft.Text("Name:", size=18, weight="bold", width=100),
-                                                ft.Text("Admin 0", size=18),
-                                            ],
-                                            alignment=ft.MainAxisAlignment.CENTER
-                                        ),
-                                        ft.Divider(height=10, color="transparent"),
-                                        
-                                        # Initials field
-                                        ft.Row(
-                                            [
-                                                ft.Text("Initials:", size=18, weight="bold", width=100),
-                                                ft.Text("AAC", size=18),
-                                            ],
-                                            alignment=ft.MainAxisAlignment.CENTER
-                                        ),
-                                        ft.Divider(height=10, color="transparent"),
-                                        
-                                        # Username field
-                                        ft.Row(
-                                            [
-                                                ft.Text("Username:", size=18, weight="bold", width=100),
-                                                self.name_value
-                                            ],
-                                            alignment=ft.MainAxisAlignment.CENTER
-                                        ),
-                                        ft.Divider(height=10, color="transparent"),
-                                        
-                                        # Password field
-                                        ft.Row(
-                                            [
-                                                ft.Text("Password:", size=18, weight="bold", width=100),
-                                                self.password_value
-                                            ],
-                                            alignment=ft.MainAxisAlignment.CENTER
-                                        ),
-                                        ft.Divider(height=20, color="transparent"),
-                                        
-                                        # Change button
-                                        ft.ElevatedButton(
-                                            text="Change Credentials",
-                                            on_click=self.open_modal,
-                                            style=ft.ButtonStyle(
-                                                shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15)),
-                                                padding=ft.padding.symmetric(horizontal=30, vertical=15)
+                [
+                    # Sidebar navigation
+                    AdminNavigation(page=self.page),
+                    # Main content area
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.Text("Admin Profile", size=36, weight="bold"),
+                                ft.Container(
+                                    content=ft.Column(
+                                        [
+                                            # Large centered profile icon
+                                            ft.Container(
+                                                content=profile_icon,
+                                                alignment=ft.alignment.center,
+                                                padding=ft.padding.only(bottom=20)
+                                            ),
+                                            
+                                            # Name field
+                                            ft.Row(
+                                                [
+                                                    ft.Text("Name:", size=18, weight="bold", width=100),
+                                                    ft.Text("Admin 0", size=18),
+                                                ],
+                                                alignment=ft.MainAxisAlignment.CENTER
+                                            ),
+                                            ft.Divider(height=10, color="transparent"),
+                                            
+                                            # Initials field
+                                            ft.Row(
+                                                [
+                                                    ft.Text("Initials:", size=18, weight="bold", width=100),
+                                                    ft.Text("AAC", size=18),
+                                                ],
+                                                alignment=ft.MainAxisAlignment.CENTER
+                                            ),
+                                            ft.Divider(height=10, color="transparent"),
+                                            
+                                            # Username field
+                                            ft.Row(
+                                                [
+                                                    ft.Text("Username:", size=18, weight="bold", width=100),
+                                                    self.name_value
+                                                ],
+                                                alignment=ft.MainAxisAlignment.CENTER
+                                            ),
+                                            ft.Divider(height=10, color="transparent"),
+                                            
+                                            # Password field
+                                            ft.Row(
+                                                [
+                                                    ft.Text("Password:", size=18, weight="bold", width=100),
+                                                    self.password_value
+                                                ],
+                                                alignment=ft.MainAxisAlignment.CENTER
+                                            ),
+                                            ft.Divider(height=20, color="transparent"),
+                                            
+                                            # Change button
+                                            ft.ElevatedButton(
+                                                text="Change Credentials",
+                                                on_click=self.open_modal,
+                                                style=ft.ButtonStyle(
+                                                    shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15)),
+                                                    padding=ft.padding.symmetric(horizontal=30, vertical=15)
+                                                )
                                             )
-                                        )
-                                    ],
-                                    alignment=ft.CrossAxisAlignment.CENTER,
-                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
-                                ),
-                                padding=ft.padding.all(40),
-                                border_radius=ft.border_radius.all(20),
-                                bgcolor=ft.Colors.TRANSPARENT,
-                                alignment=ft.alignment.center
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                        ],
+                                        alignment=ft.CrossAxisAlignment.CENTER,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                                    ),
+                                    padding=ft.padding.all(40),
+                                    border_radius=ft.border_radius.all(20),
+                                    bgcolor=ft.Colors.TRANSPARENT,
+                                    alignment=ft.alignment.center
+                                )
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            expand=True
+                        ),
+                        padding=ft.padding.all(30),
                         expand=True
                     )
                 ],
-                alignment=ft.MainAxisAlignment.CENTER,
-                vertical_alignment=ft.CrossAxisAlignment.CENTER,
                 expand=True
             )
         ]

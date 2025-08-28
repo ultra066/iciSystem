@@ -44,7 +44,7 @@ class AdminLoginView(ft.View):
                                 ),
                                 padding=ft.padding.all(30),
                                 border_radius=ft.border_radius.all(20),
-                                bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
+                                bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.RED),
                                 alignment=ft.alignment.center
                             ),
                             ft.TextButton("Employee Login", on_click=lambda _: self.page.go("/"))

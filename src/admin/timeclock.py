@@ -38,14 +38,9 @@ class AdminAttendanceView(ft.View):
         self.controls = [
             ft.Row(
                 [
-                    # Admin Navigation
-                    ft.Container(
-                        content=AdminNavigation(page=self.page),
-                        width=100,
-                        bgcolor="#263238",
-                        padding=ft.padding.all(20),
-                        border_radius=ft.border_radius.all(10),
-                    ),
+                    # Sidebar navigation
+                    AdminNavigation(page=self.page),
+                    # Main content area
                     ft.Container(
                         content=ft.Column(
                             [
