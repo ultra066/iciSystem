@@ -8,9 +8,6 @@ from employee.dashboard import UserDashboardView
 from employee.profile import UserProfileView
 from admin.dashboard import AdminDashboardView
 from admin.employees import AdminEmployeesView
-from admin.departments import AdminDepartmentsView
-from admin.attendance_view import AdminAttendanceView
-from admin.statistics import AdminStatisticsView
 from admin.login import AdminLoginView
 from admin.profile import AdminProfileView
 from admin.timeclock import AdminAttendanceView as AdminTimeclockView
@@ -45,12 +42,6 @@ def main(page: ft.Page):
             page.views.append(AdminDashboardView(page=page))
         elif page.route == "/admin/employees":
             page.views.append(AdminEmployeesView(page=page))
-        elif page.route == "/admin/departments":
-            page.views.append(AdminDepartmentsView(page=page))
-        elif page.route == "/admin/attendance":
-            page.views.append(AdminAttendanceView(page=page))
-        elif page.route == "/admin/statistics":
-            page.views.append(AdminStatisticsView(page=page))
         elif page.route == "/admin/profile":
             page.views.append(AdminProfileView(page=page))
         elif page.route == "/admin/timeclock":

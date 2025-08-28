@@ -25,7 +25,7 @@ class AdminDashboardView(ft.View):
                 page=self.page,
                 main_content=ft.Column(
                     [
-                        AdminHeader("Admin Dashboard"),
+                        AdminHeader("DASHBOARD"),
                         ft.Divider(height=20),
                         ft.Row(
                             [
