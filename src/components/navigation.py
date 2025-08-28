@@ -5,44 +5,71 @@ class AdminNavigation(ft.Container):
     A reusable navigation sidebar for the admin pages.
     """
     def __init__(self, page: ft.Page):
+        self.page = page
+        
+        # Create the column content
+        column_content = ft.Column(
+            [
+                # Logo clickable to go to Dashboard
+                ft.Container(
+                    content=ft.Image(
+                        src=r"C:\Users\ojt\iciAttendanceSystem\attendance_system\src\assets\images\INNOVATIVE-LOGO.png",  # Placeholder for your image path
+                        fit=ft.ImageFit.CONTAIN
+                    ),
+                    on_click=lambda _: self.page.go("/admin/dashboard"),
+                    height=50,
+                    alignment=ft.alignment.center
+                ),
+                ft.Divider(height=20, color="transparent"),
+                
+                # Profile Button
+                ft.Container(
+                    content=ft.Icon(name=ft.Icons.ACCOUNT_CIRCLE, color="white"),
+                    width=60,
+                    height=60,
+                    border_radius=ft.border_radius.all(30),
+                    bgcolor=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
+                    alignment=ft.alignment.center,
+                    on_click=lambda _: self.page.go("/admin/profile")
+                ),
+                
+                # Time Clock Button
+                ft.Container(
+                    content=ft.Icon(name=ft.Icons.ACCESS_TIME, color="white"),
+                    width=60,
+                    height=60,
+                    border_radius=ft.border_radius.all(30),
+                    bgcolor=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
+                    alignment=ft.alignment.center,
+                    on_click=lambda _: self.page.go("/admin/timeclock")
+                ),
+
+                # Placeholder to fill remaining space
+                ft.Column(
+                    [],
+                    expand=True
+                ),
+
+                # Logout Button at the bottom
+                ft.Container(
+                    content=ft.Icon(name=ft.Icons.EXIT_TO_APP, color="white"),
+                    width=60,
+                    height=60,
+                    border_radius=ft.border_radius.all(30),
+                    bgcolor=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
+                    alignment=ft.alignment.center,
+                    on_click=lambda _: self.page.go("/")
+                ),
+            ],
+            spacing=25,
+            alignment=ft.MainAxisAlignment.START,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+        
+        # Wrap the column in a container for padding and styling
         super().__init__(
-            content=ft.Column(
-                [
-                    ft.TextButton(
-                        content=ft.Text("Dashboard", size=20, weight="bold"),
-                        style=ft.ButtonStyle(color="white"),
-                        on_click=lambda _: page.go("/admin/dashboard")
-                    ),
-                    ft.TextButton(
-                        content=ft.Text("Employees", size=20, weight="bold"),
-                        style=ft.ButtonStyle(color="white"),
-                        on_click=lambda _: page.go("/admin/employees")
-                    ),
-                    ft.TextButton(
-                        content=ft.Text("Departments", size=20, weight="bold"),
-                        style=ft.ButtonStyle(color="white"),
-                        on_click=lambda _: page.go("/admin/departments")
-                    ),
-                    ft.TextButton(
-                        content=ft.Text("Attendance", size=20, weight="bold"),
-                        style=ft.ButtonStyle(color="white"),
-                        on_click=lambda _: page.go("/admin/attendance")
-                    ),
-                    ft.TextButton(
-                        content=ft.Text("Statistics", size=20, weight="bold"),
-                        style=ft.ButtonStyle(color="white"),
-                        on_click=lambda _: page.go("/admin/statistics")
-                    ),
-                    ft.TextButton(
-                        content=ft.Text("Logout", size=20, weight="bold"),
-                        style=ft.ButtonStyle(color="white"),
-                        on_click=lambda _: page.go("/")
-                    ),
-                ],
-                spacing=25,
-            ),
-            padding=20,
-            width=250,
-            bgcolor="#263238",
-            border_radius=ft.border_radius.all(10),
+            content=column_content,
+            padding=ft.padding.all(20),
+            width=100,
+            bgcolor="transparent"
         )

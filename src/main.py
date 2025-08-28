@@ -12,6 +12,8 @@ from admin.departments import AdminDepartmentsView
 from admin.attendance_view import AdminAttendanceView
 from admin.statistics import AdminStatisticsView
 from admin.login import AdminLoginView
+from admin.profile import AdminProfileView
+from admin.timeclock import AdminAttendanceView as AdminTimeclockView
 
 def main(page: ft.Page):
     """
@@ -49,6 +51,10 @@ def main(page: ft.Page):
             page.views.append(AdminAttendanceView(page=page))
         elif page.route == "/admin/statistics":
             page.views.append(AdminStatisticsView(page=page))
+        elif page.route == "/admin/profile":
+            page.views.append(AdminProfileView(page=page))
+        elif page.route == "/admin/timeclock":
+            page.views.append(AdminTimeclockView(page=page))
             
         page.update()
 
