@@ -3,7 +3,7 @@ from datetime import datetime
 from database import db
 from models.employee import Employee
 from models.attendance import Attendance
-from components.navigation import AdminNavigation
+from components.admin_layout import AdminLayout
 from components.header import AdminHeader
 from components.cards import InfoCard
 from peewee import fn
@@ -21,35 +21,26 @@ class AdminDashboardView(ft.View):
         )
 
         self.controls = [
-            ft.Row(
-                [
-                    # Sidebar navigation
-                    AdminNavigation(page=self.page),
-                    # Main content area
-                    ft.Container(
-                        content=ft.Column(
+            AdminLayout(
+                page=self.page,
+                main_content=ft.Column(
+                    [
+                        AdminHeader("Admin Dashboard"),
+                        ft.Divider(height=20),
+                        ft.Row(
                             [
-                                AdminHeader("Admin Dashboard"),
-                                ft.Divider(height=20),
-                                ft.Row(
-                                    [
-                                        self.create_info_cards(),
-                                    ],
-                                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                                    expand=True
-                                ),
-                                ft.Divider(height=20),
-                                self.create_attendance_table_container(),
+                                self.create_info_cards(),
                             ],
-                            expand=True,
-                            alignment=ft.MainAxisAlignment.START,
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                            expand=True
                         ),
-                        padding=ft.padding.all(30),
-                        expand=True
-                    )
-                ],
-                expand=True
+                        ft.Divider(height=20),
+                        self.create_attendance_table_container(),
+                    ],
+                    expand=True,
+                    alignment=ft.MainAxisAlignment.START,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                )
             )
         ]
 
@@ -112,7 +103,9 @@ class AdminDashboardView(ft.View):
                                 .join(Employee)
                                 .where(Attendance.date == today_date))
             
-            table = self.controls[0].controls[1].controls[2].content.controls[2]
+            # The table is now in the main content area of the AdminLayout
+            # Path: AdminLayout -> Column -> Row -> Container -> Column -> [Header, Divider, Row, Divider, Container -> Column -> [Text, Divider, DataTable]]
+            table = self.controls[0].content.controls[1].content.controls[1].content.controls[4].content.controls[2]
             table.rows.clear()
             
             if attendance_query.count() == 0:

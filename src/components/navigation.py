@@ -10,17 +10,6 @@ class AdminNavigation(ft.Container):
         # Create the column content
         column_content = ft.Column(
             [
-                # Logo clickable to go to Dashboard
-                ft.Container(
-                    content=ft.Image(
-                        src=r"C:\Users\ojt\iciAttendanceSystem\attendance_system\src\assets\images\INNOVATIVE-LOGO.png",  # Placeholder for your image path
-                        fit=ft.ImageFit.CONTAIN
-                    ),
-                    on_click=lambda _: self.page.go("/admin/dashboard"),
-                    height=50,
-                    alignment=ft.alignment.center
-                ),
-                ft.Divider(height=20, color="transparent"),
                 
                 # Profile Button
                 ft.Container(

@@ -2,7 +2,7 @@ import flet as ft
 from database import db
 from models.employee import Employee
 from models.department import Department
-from components.navigation import AdminNavigation
+from components.admin_layout import AdminLayout
 from components.header import AdminHeader
 from utils import generate_unique_employee_id, get_initials
 import qrcode
@@ -17,37 +17,27 @@ class AdminEmployeesView(ft.View):
 
         self.add_employee_dialog = self.create_add_employee_dialog()
         
+        # Create the employees table
+        self.employees_table = self.create_employees_table()
+        
         self.controls = [
-            ft.Row(
-                [
-                    ft.Container(
-                        content=AdminNavigation(page=self.page),
-                        width=250,
-                        bgcolor="#263238",
-                        padding=ft.padding.all(20),
-                        border_radius=ft.border_radius.all(10),
-                    ),
-                    ft.Container(
-                        content=ft.Column(
+            AdminLayout(
+                page=self.page,
+                main_content=ft.Column(
+                    [
+                        AdminHeader("Employee Management"),
+                        ft.Divider(height=20),
+                        ft.Row(
                             [
-                                AdminHeader("Employee Management"),
-                                ft.Divider(height=20),
-                                ft.Row(
-                                    [
-                                        ft.TextField(hint_text="Search Employee", expand=True),
-                                        ft.ElevatedButton(text="Add New Employee", on_click=self.open_add_employee_dialog),
-                                    ],
-                                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-                                ),
-                                self.create_employees_table(),
+                                ft.TextField(hint_text="Search Employee", expand=True),
+                                ft.ElevatedButton(text="Add New Employee", on_click=self.open_add_employee_dialog),
                             ],
-                            expand=True,
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                         ),
-                        padding=ft.padding.all(30),
-                        expand=True
-                    )
-                ],
-                expand=True
+                        self.employees_table,
+                    ],
+                    expand=True,
+                )
             )
         ]
 
@@ -92,12 +82,11 @@ class AdminEmployeesView(ft.View):
         db.connect()
         all_employees = Employee.select().order_by(Employee.name)
         
-        # Access the table correctly - it's now in a Container
-        table = self.controls[0].controls[1].content.controls[3]
-        table.rows.clear()
+        # Access the table correctly
+        self.employees_table.rows.clear()
         
         for emp in all_employees:
-            table.rows.append(
+            self.employees_table.rows.append(
                 ft.DataRow(
                     cells=[
                         ft.DataCell(ft.Text(emp.employee_id)),
@@ -119,7 +108,7 @@ class AdminEmployeesView(ft.View):
     def open_add_employee_dialog(self, e):
         db.connect()
         departments = Department.select()
-        self.department_dropdown.options = [ft.dropdown.Option(d.name, value=d.id) for d in departments]
+        self.department_dropdown.options = [ft.dropdown.Option(text=d.name, key=str(d.id)) for d in departments]
         db.close()
         
         self.page.dialog = self.add_employee_dialog

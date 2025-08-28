@@ -2,7 +2,7 @@ import flet as ft
 from datetime import date, datetime
 from database import db
 from models.attendance import Attendance
-from components.navigation import AdminNavigation
+from components.admin_layout import AdminLayout
 
 class AdminAttendanceView(ft.View):
     """
@@ -36,43 +36,34 @@ class AdminAttendanceView(ft.View):
         )
         
         self.controls = [
-            ft.Row(
-                [
-                    # Sidebar navigation
-                    AdminNavigation(page=self.page),
-                    # Main content area
-                    ft.Container(
-                        content=ft.Column(
+            AdminLayout(
+                page=self.page,
+                main_content=ft.Column(
+                    [
+                        ft.Text("Employee Attendance", size=36, weight="bold"),
+                        ft.Row(
                             [
-                                ft.Text("Employee Attendance", size=36, weight="bold"),
-                                ft.Row(
-                                    [
-                                        ft.Text(f"Selected Date: {self.selected_date.strftime('%B %d, %Y')}", size=18),
-                                        ft.ElevatedButton(
-                                            "Select Date",
-                                            icon=ft.Icons.CALENDAR_MONTH,
-                                            on_click=lambda e: self.date_picker.pick_date(),
-                                        )
-                                    ],
-                                    alignment=ft.MainAxisAlignment.CENTER
-                                ),
-                                ft.Container(
-                                    content=self.data_table,
-                                    padding=ft.padding.all(20),
-                                    border_radius=ft.border_radius.all(20),
-                                    bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.GREY),
-                                    alignment=ft.alignment.top_center
+                                ft.Text(f"Selected Date: {self.selected_date.strftime('%B %d, %Y')}", size=18),
+                                ft.ElevatedButton(
+                                    "Select Date",
+                                    icon=ft.Icons.CALENDAR_MONTH,
+                                    on_click=lambda e: self.date_picker.pick_date(),
                                 )
                             ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                            expand=True
+                            alignment=ft.MainAxisAlignment.CENTER
                         ),
-                        padding=ft.padding.all(30),
-                        expand=True
-                    )
-                ],
-                expand=True
+                        ft.Container(
+                            content=self.data_table,
+                            padding=ft.padding.all(20),
+                            border_radius=ft.border_radius.all(20),
+                            bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.GREY),
+                            alignment=ft.alignment.top_center
+                        )
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    expand=True
+                )
             )
         ]
         
