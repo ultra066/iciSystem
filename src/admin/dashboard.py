@@ -5,8 +5,71 @@ from models.employee import Employee
 from models.attendance import Attendance
 from components.admin_layout import AdminLayout
 from components.header import AdminHeader
+from components.pie_graph import EmployeeStatusPieChart, fetch_employee_status_data  # Importing the function and class
+from components.monthly_summary import MonthlySummary
 from components.cards import InfoCard
 from peewee import fn
+
+def fetch_monthly_summary_data():
+    """Fetch monthly attendance summary data for the current month"""
+    try:
+        db.connect()
+        current_month = datetime.now().month
+        current_year = datetime.now().year
+        
+        # Get total employees
+        total_employees = Employee.select().count()
+        
+        # Get first and last day of current month
+        first_day = datetime(current_year, current_month, 1).date()
+        if current_month == 12:
+            last_day = datetime(current_year + 1, 1, 1).date()
+        else:
+            last_day = datetime(current_year, current_month + 1, 1).date()
+        
+        # Get attendance data for current month using date range
+        present_count = (Attendance
+                        .select()
+                        .where(
+                            (Attendance.date >= first_day) &
+                            (Attendance.date < last_day) &
+                            (Attendance.status == 'Present')
+                        )
+                        .count())
+        
+        absent_count = (Attendance
+                       .select()
+                       .where(
+                           (Attendance.date >= first_day) &
+                           (Attendance.date < last_day) &
+                           (Attendance.status == 'Absent')
+                       )
+                       .count())
+        
+        # Calculate percentages
+        total_records = present_count + absent_count
+        if total_records > 0:
+            active_percent = round((present_count / total_records) * 100)
+            absent_percent = round((absent_count / total_records) * 100)
+        else:
+            active_percent = 0
+            absent_percent = 0
+            
+        # For demo purposes, using placeholder values for changes
+        active_change = 5  # 5% increase from last month
+        absent_change = -3  # 3% decrease from last month
+        
+    finally:
+        db.close()
+    
+    return {
+        'month': datetime.now().strftime('%B'),
+        'year': current_year,
+        'active_percent': active_percent,
+        'absent_percent': absent_percent,
+        'active_change': active_change,
+        'absent_change': absent_change
+    }
 
 class AdminDashboardView(ft.View):
     def __init__(self, page: ft.Page):
@@ -20,6 +83,10 @@ class AdminDashboardView(ft.View):
             bgcolor=ft.Colors.with_opacity(0.8, ft.Colors.WHITE),
         )
 
+        # Fetch data for components
+        monthly_data = fetch_monthly_summary_data()
+        status_data = fetch_employee_status_data()
+
         self.controls = [
             AdminLayout(
                 page=self.page,
@@ -29,13 +96,37 @@ class AdminDashboardView(ft.View):
                         ft.Divider(height=20),
                         ft.Row(
                             [
-                                self.create_info_cards(),
+                                # Left column with pie chart on top of monthly summary
+                                ft.Column(
+                                    [
+                                        EmployeeStatusPieChart(*status_data),
+                                        ft.Divider(height=20),
+                                        MonthlySummary(
+                                            month=monthly_data['month'],
+                                            year=monthly_data['year'],
+                                            active_percent=monthly_data['active_percent'],
+                                            absent_percent=monthly_data['absent_percent'],
+                                            active_change=monthly_data['active_change'],
+                                            absent_change=monthly_data['absent_change']
+                                        ),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.START,
+                                    horizontal_alignment=ft.CrossAxisAlignment.START,
+                                ),
+                                # Right column for future components (currently empty)
+                                ft.Column(
+                                    [
+                                        # Placeholder for future components
+                                        ft.Container(width=400, height=520)
+                                    ],
+                                    alignment=ft.MainAxisAlignment.START,
+                                    horizontal_alignment=ft.CrossAxisAlignment.START,
+                                )
                             ],
-                            alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                            alignment=ft.MainAxisAlignment.START,
+                            spacing=40,
                             expand=True
                         ),
-                        ft.Divider(height=20),
-                        self.create_attendance_table_container(),
                     ],
                     expand=True,
                     alignment=ft.MainAxisAlignment.START,
@@ -91,53 +182,9 @@ class AdminDashboardView(ft.View):
         )
 
     def did_mount(self):
-        self.load_daily_attendance_data()
+        # No need to load attendance data since table is removed
+        pass
 
     def load_daily_attendance_data(self):
-        try:
-            db.connect()
-            today_date = datetime.now().date()
-            
-            attendance_query = (Attendance
-                                .select(Attendance, Employee, Employee.name, Employee.initials)
-                                .join(Employee)
-                                .where(Attendance.date == today_date))
-            
-            # The table is now in the main content area of the AdminLayout
-            # Path: AdminLayout -> Column -> Row -> Container -> Column -> [Header, Divider, Row, Divider, Container -> Column -> [Text, Divider, DataTable]]
-            table = self.controls[0].content.controls[1].content.controls[1].content.controls[4].content.controls[2]
-            table.rows.clear()
-            
-            if attendance_query.count() == 0:
-                # Add a message row if no attendance records found
-                table.rows.append(
-                    ft.DataRow(
-                        cells=[
-                            ft.DataCell(ft.Text("No attendance records for today", italic=True, color="gray")),
-                            ft.DataCell(ft.Text("")),
-                            ft.DataCell(ft.Text("")),
-                            ft.DataCell(ft.Text("")),
-                            ft.DataCell(ft.Text("")),
-                        ]
-                    )
-                )
-            else:
-                for record in attendance_query:
-                    table.rows.append(
-                        ft.DataRow(
-                            cells=[
-                                ft.DataCell(ft.Text(record.employee.name)),
-                                ft.DataCell(ft.Text(record.employee.department.name)),
-                                ft.DataCell(ft.Text(record.time_in.strftime("%I:%M %p"))),
-                                ft.DataCell(ft.Text(record.time_out.strftime("%I:%M %p") if record.time_out else "N/A")),
-                                ft.DataCell(ft.Text(record.status)),
-                            ]
-                        )
-                    )
-            
-            self.page.update()
-        except Exception as e:
-            self.page.snack_bar = ft.SnackBar(ft.Text(f"Error loading attendance data: {e}"), open=True)
-            self.page.update()
-        finally:
-            db.close()
+        # This method is no longer needed since table is removed
+        pass

@@ -32,7 +32,7 @@ class AdminLayout(ft.Container):
                             content=main_content if main_content else ft.Text("No content provided"),
                             expand=True,
                             padding=ft.padding.all(20),
-                            margin=ft.margin.only(top=10)  # Add margin to avoid overlap
+                            margin=ft.margin.only(top=2)  # Reduced margin to push content closer to top_nav
                         )
                     ],
                     expand=True
