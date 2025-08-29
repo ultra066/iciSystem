@@ -7,6 +7,7 @@ from components.admin_layout import AdminLayout
 from components.header import AdminHeader
 from components.pie_graph import EmployeeStatusPieChart, fetch_employee_status_data  # Importing the function and class
 from components.monthly_summary import MonthlySummary
+from components.time_in_time_out import TodayAttendance
 from components.cards import InfoCard
 from peewee import fn
 
@@ -71,6 +72,46 @@ def fetch_monthly_summary_data():
         'absent_change': absent_change
     }
 
+def fetch_today_attendance_data():
+    """Fetch today's attendance data for the time-in/time-out component"""
+    try:
+        db.connect()
+        today_date = datetime.now().date()
+        
+        # Get all employees with their attendance for today
+        attendance_data = []
+        employees = Employee.select()
+        
+        for employee in employees:
+            # Get today's attendance record for this employee
+            attendance_record = (Attendance
+                               .select()
+                               .where(
+                                   (Attendance.employee_id == employee.id) &
+                                   (Attendance.date == today_date)
+                               )
+                               .first())
+            
+            if attendance_record:
+                time_in = attendance_record.time_in.strftime('%I:%M %p') if attendance_record.time_in else 'Not clocked in'
+                time_out = attendance_record.time_out.strftime('%I:%M %p') if attendance_record.time_out else 'Not clocked out'
+            else:
+                time_in = 'Not clocked in'
+                time_out = 'Not clocked out'
+            
+            attendance_data.append({
+                'name': employee.name,
+                'initials': employee.initials if employee.initials else employee.name[:2].upper(),
+                'dept': employee.department.name if employee.department else 'N/A',
+                'time_in': time_in,
+                'time_out': time_out
+            })
+            
+    finally:
+        db.close()
+    
+    return attendance_data
+
 class AdminDashboardView(ft.View):
     def __init__(self, page: ft.Page):
         super().__init__()
@@ -86,6 +127,13 @@ class AdminDashboardView(ft.View):
         # Fetch data for components
         monthly_data = fetch_monthly_summary_data()
         status_data = fetch_employee_status_data()
+        attendance_data = fetch_today_attendance_data()
+
+        # Create the TodayAttendance component and populate it with data
+        today_attendance = TodayAttendance()
+        # Set the data directly instead of calling update_attendance_data which tries to update before component is added
+        today_attendance.attendance_data = attendance_data
+        today_attendance.data_table.rows = today_attendance.create_table_rows(attendance_data)
 
         self.controls = [
             AdminLayout(
@@ -113,17 +161,17 @@ class AdminDashboardView(ft.View):
                                     alignment=ft.MainAxisAlignment.START,
                                     horizontal_alignment=ft.CrossAxisAlignment.START,
                                 ),
-                                # Right column for future components (currently empty)
+                                # Right column with time-in/time-out component - now expands to fill space
                                 ft.Column(
                                     [
-                                        # Placeholder for future components
-                                        ft.Container(width=400, height=520)
+                                        today_attendance
                                     ],
                                     alignment=ft.MainAxisAlignment.START,
-                                    horizontal_alignment=ft.CrossAxisAlignment.START,
+                                    horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
+                                    expand=True
                                 )
                             ],
-                            alignment=ft.MainAxisAlignment.START,
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                             spacing=40,
                             expand=True
                         ),
