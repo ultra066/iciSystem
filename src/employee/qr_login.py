@@ -112,7 +112,7 @@ class QRLoginView(ft.View):
                                         ),
                                         alignment=ft.alignment.center,
                                         width="70%",
-                                        height="80%"
+                                        height="70%"
                                     ),
                                     ft.TextButton(
                                         "Admin Login", 
