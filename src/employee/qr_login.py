@@ -44,8 +44,8 @@ class QRLoginView(ft.View):
                                             colors=["#EF3334", "#613636",]
                                         ),
                                         alignment=ft.alignment.center,
-                                        width=650,
-                                        height=400
+                                        width="70%",
+                                        height="80%"
                                     ),
                                     ft.TextButton("Admin Login", on_click=lambda _: self.page.go("/admin/login"))
                                 ],
@@ -54,8 +54,8 @@ class QRLoginView(ft.View):
                                 expand=True
                             ),
                             margin=ft.margin.only(right=50),
-                            width=450,
-                            height=600
+                            width="75%",
+                            height="90%"
                         )
                     ],
                     expand=True
