@@ -20,7 +20,29 @@ class QRLoginView(ft.View):
             ft.Container(
                 content=ft.Row(
                     [
-                        ft.Container(expand=True),
+                        ft.Container(
+                            content=ft.Column(
+                                [
+                                    ft.Image(
+                                        src="images/INNOVATIVE-LOGO.png",
+                                        width=300,
+                                        height=300,
+                                        fit=ft.ImageFit.CONTAIN
+                                    ),
+                                    ft.Text(
+                                        "INNOVATIVE CONTROLS, INC.",
+                                        size=30,
+                                        color=ft.Colors.BLACK,
+                                        text_align=ft.TextAlign.CENTER,
+                                        weight=ft.FontWeight.BOLD
+                                    )
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                expand=True
+                            ),
+                            expand=True
+                        ),
                         ft.Container(
                             content=ft.Column(
                                 [

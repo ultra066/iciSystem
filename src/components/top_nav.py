@@ -11,7 +11,7 @@ class AdminTopNavigation(ft.Container):
         # Create the logo container
         self.logo = ft.Container(
             content=ft.Image(
-                src=r"C:\Users\ojt\iciAttendanceSystem\attendance_system\src\assets\images\INNOVATIVE-LOGO.png",  # Placeholder for your image path
+                src=r"images/INNOVATIVE-LOGO.png",  # Placeholder for your image path
                 fit=ft.ImageFit.CONTAIN
             ),
             on_click=lambda _: self.page.go("/admin/dashboard"),
