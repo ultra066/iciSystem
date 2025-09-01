@@ -29,7 +29,7 @@ def main(page: ft.Page):
         
         # User Views
         if page.route == "/":
-            page.views.append(AdminDashboardView(page=page))
+            page.views.append(QRLoginView(page=page))
         elif page.route == "/user/dashboard":
             page.views.append(UserDashboardView(page=page, employee=page.employee))
         elif page.route == "/user/profile":
