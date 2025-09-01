@@ -4,3 +4,4 @@ qrcode
 pyzbar
 peewee
 bcrypt
+pillow

@@ -32,7 +32,7 @@ class AdminLoginView(ft.View):
                             content=ft.Column(
                                 [
                                     ft.Image(
-                                        src="images/INNOVATIVE-LOGO.png",
+                                        src="images/LOGO.png",
                                         width=300,
                                         height=300,
                                         fit=ft.ImageFit.CONTAIN
