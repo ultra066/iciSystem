@@ -20,35 +20,44 @@ class QRLoginView(ft.View):
             ft.Container(
                 content=ft.Row(
                     [
-                        ft.Column(
-                            [
-                                ft.Text("Employee Login", size=36, weight="bold"),
-                                ft.Text("Scan your QR code to clock in/out", size=18, color="gray"),
-                                ft.Container(
-                                    content=ft.Column(
-                                        [
-                                            ft.Icon(name=ft.Icons.QR_CODE_SCANNER, size=150, color=ft.Colors.DEEP_PURPLE_ACCENT_400),
-                                            self.qr_code_field,
-                                            ft.ElevatedButton(
-                                                text="Simulate Scan & Login",
-                                                on_click=self.handle_login
-                                            ),
-                                        ],
-                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                        ft.Container(expand=True),
+                        ft.Container(
+                            content=ft.Column(
+                                [
+                                    ft.Container(
+                                        content=ft.Column(
+                                            [
+                                                ft.Icon(name=ft.Icons.QR_CODE_SCANNER, size=150, color=ft.Colors.DEEP_PURPLE_ACCENT_400),
+                                                self.qr_code_field,
+                                                ft.ElevatedButton(
+                                                    text="Simulate Scan & Login",
+                                                    on_click=self.handle_login
+                                                ),
+                                            ],
+                                            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                                        ),
+                                        padding=ft.padding.all(30),
+                                        border_radius=ft.border_radius.all(20),
+                                        gradient=ft.LinearGradient(
+                                            begin=ft.Alignment(0, -1),  # top
+                                            end=ft.Alignment(0, 1),    # bottom
+                                            colors=["#EF3334", "#613636",]
+                                        ),
+                                        alignment=ft.alignment.center,
+                                        width=650,
+                                        height=400
                                     ),
-                                    padding=ft.padding.all(30),
-                                    border_radius=ft.border_radius.all(20),
-                                    bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
-                                    alignment=ft.alignment.center
-                                ),
-                                ft.TextButton("Admin Login", on_click=lambda _: self.page.go("/admin/login"))
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                            expand=True
+                                    ft.TextButton("Admin Login", on_click=lambda _: self.page.go("/admin/login"))
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                expand=True
+                            ),
+                            margin=ft.margin.only(right=50),
+                            width=450,
+                            height=600
                         )
                     ],
-                    alignment=ft.MainAxisAlignment.CENTER,
                     expand=True
                 ),
                 gradient=ft.LinearGradient(
