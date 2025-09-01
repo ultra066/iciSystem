@@ -141,38 +141,43 @@ class AdminDashboardView(ft.View):
                 main_content=ft.Column(
                     [
                         AdminHeader("DASHBOARD"),
-                        ft.Divider(height=20),
                         ft.Row(
                             [
-                                # Left column with pie chart on top of monthly summary
-                                ft.Column(
-                                    [
-                                        EmployeeStatusPieChart(*status_data),
-                                        ft.Divider(height=20),
-                                        MonthlySummary(
-                                            month=monthly_data['month'],
-                                            year=monthly_data['year'],
-                                            active_percent=monthly_data['active_percent'],
-                                            absent_percent=monthly_data['absent_percent'],
-                                            active_change=monthly_data['active_change'],
-                                            absent_change=monthly_data['absent_change']
-                                        ),
-                                    ],
-                                    alignment=ft.MainAxisAlignment.START,
-                                    horizontal_alignment=ft.CrossAxisAlignment.START,
+                                # Left column with pie chart on top of monthly summary - now expands
+                                ft.Container(
+                                    content=ft.Column(
+                                        [
+                                            EmployeeStatusPieChart(*status_data),
+                                            MonthlySummary(
+                                                month=monthly_data['month'],
+                                                year=monthly_data['year'],
+                                                active_percent=monthly_data['active_percent'],
+                                                absent_percent=monthly_data['absent_percent'],
+                                                active_change=monthly_data['active_change'],
+                                                absent_change=monthly_data['absent_change']
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.START,
+                                        horizontal_alignment=ft.CrossAxisAlignment.START,
+                                        expand=True,
+                                    ),
+                                    expand=True,
                                 ),
-                                # Right column with time-in/time-out component - now expands to fill space
-                                ft.Column(
-                                    [
-                                        today_attendance
-                                    ],
-                                    alignment=ft.MainAxisAlignment.START,
-                                    horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
-                                    expand=True
+                                # Right column with time-in/time-out component - expands to fill space
+                                ft.Container(
+                                    content=ft.Column(
+                                        [
+                                            today_attendance
+                                        ],
+                                        alignment=ft.MainAxisAlignment.START,
+                                        horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
+                                        expand=True,
+                                    ),
+                                    expand=True,
                                 )
                             ],
                             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                            spacing=40,
+                            spacing=20,
                             expand=True
                         ),
                     ],

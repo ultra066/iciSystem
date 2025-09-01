@@ -84,12 +84,11 @@ class MonthlySummary(ft.Container):
             spacing=12,
         )
         
-        # Style the container - same size as pie_chart container (350x200px)
+        # Style the container - responsive sizing
         self.bgcolor = ft.Colors.GREY_900
         self.padding = 15
         self.border_radius = 15
-        self.width = 350
-        self.height = 190
+        self.expand = True
 
 # Example usage
 def main(page: ft.Page):

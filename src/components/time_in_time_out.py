@@ -62,11 +62,11 @@ class TodayAttendance(ft.Container):
             spacing=15,
         )
         
-        # Style the container
+        # Style the container - responsive sizing
         self.bgcolor = ft.Colors.GREY_900
         self.padding = 20
         self.border_radius = 10
-        # Removed fixed width to allow stretching to rightmost part
+        self.expand = True
         
     def create_table_rows(self, data):
         rows = []

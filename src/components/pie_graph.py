@@ -90,12 +90,11 @@ class EmployeeStatusPieChart(ft.Container):
             spacing=10,
         )
         
-        # Style the container
+        # Style the container - responsive sizing
         self.bgcolor = ft.Colors.GREY_900
         self.padding = 15
         self.border_radius = 15
-        self.width = 350
-        self.height = 190
+        self.expand = True
         
     def _create_legend_item(self, label, percentage, color):
         return ft.Row(
