@@ -11,9 +11,50 @@ class QRLoginView(ft.View):
         super().__init__()
         self.page = page
         self.route = "/"
-        self.qr_code_field = ft.TextField(
-            label="Enter QR Code (Simulated)",
-            helper_text="For demonstration, manually enter an employee's QR code string."
+        
+        # Create the two button containers
+        scan_button = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Icon(name=ft.Icons.QR_CODE_SCANNER, size=80, color=ft.Colors.WHITE),
+                    ft.Text("SCAN QR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD)
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=15
+            ),
+            padding=ft.padding.all(30),
+            border_radius=ft.border_radius.all(20),
+            gradient=ft.LinearGradient(
+                begin=ft.Alignment(-1, -1),  # top-left
+                end=ft.Alignment(1, 1),    # bottom-right
+                colors=["#EF3334", "#DB7929"]
+            ),
+            on_click=self.handle_scan_click,
+            alignment=ft.alignment.center,
+            width=200,
+            height=200
+        )
+        
+        upload_button = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Icon(name=ft.Icons.UPLOAD_FILE, size=80, color=ft.Colors.WHITE),
+                    ft.Text("UPLOAD QR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD)
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=15
+            ),
+            padding=ft.padding.all(30),
+            border_radius=ft.border_radius.all(20),
+            gradient=ft.LinearGradient(
+                begin=ft.Alignment(-1, -1),  # top-left
+                end=ft.Alignment(1, 1),    # bottom-right
+                colors=["#EF3334", "#DB7929"]
+            ),
+            on_click=self.handle_upload_click,
+            alignment=ft.alignment.center,
+            width=200,
+            height=200
         )
 
         self.controls = [
@@ -49,14 +90,18 @@ class QRLoginView(ft.View):
                                     ft.Container(
                                         content=ft.Column(
                                             [
-                                                ft.Icon(name=ft.Icons.QR_CODE_SCANNER, size=150, color=ft.Colors.DEEP_PURPLE_ACCENT_400),
-                                                self.qr_code_field,
-                                                ft.ElevatedButton(
-                                                    text="Simulate Scan & Login",
-                                                    on_click=self.handle_login
-                                                ),
+                                                ft.Divider(height=30, color=ft.Colors.TRANSPARENT),
+                                                ft.Row(
+                                                    [
+                                                        scan_button,
+                                                        ft.VerticalDivider(width=30, color=ft.Colors.TRANSPARENT),
+                                                        upload_button
+                                                    ],
+                                                    alignment=ft.MainAxisAlignment.CENTER
+                                                )
                                             ],
-                                            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                            spacing=10
                                         ),
                                         padding=ft.padding.all(30),
                                         border_radius=ft.border_radius.all(20),
@@ -69,7 +114,11 @@ class QRLoginView(ft.View):
                                         width="70%",
                                         height="80%"
                                     ),
-                                    ft.TextButton("Admin Login", on_click=lambda _: self.page.go("/admin/login"))
+                                    ft.TextButton(
+                                        "Admin Login", 
+                                        on_click=lambda _: self.page.go("/admin/login"),
+                                        style=ft.ButtonStyle(color=ft.Colors.WHITE)
+                                    )
                                 ],
                                 alignment=ft.MainAxisAlignment.CENTER,
                                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -91,6 +140,16 @@ class QRLoginView(ft.View):
             )
         ]
 
+    def handle_scan_click(self, e):
+        # Handle QR code scanning
+        self.page.snack_bar = ft.SnackBar(ft.Text("Scan QR code functionality would be implemented here."), open=True)
+        self.page.update()
+
+    def handle_upload_click(self, e):
+        # Handle QR code upload
+        self.page.snack_bar = ft.SnackBar(ft.Text("Upload QR code functionality would be implemented here."), open=True)
+        self.page.update()
+
     def handle_login(self, e):
         qr_code = self.qr_code_field.value
         if not qr_code:
@@ -108,4 +167,3 @@ class QRLoginView(ft.View):
             self.page.update()
         finally:
             db.close()
-
