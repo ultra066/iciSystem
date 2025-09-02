@@ -1,6 +1,10 @@
 import flet as ft
 from database import db
 from models.employee import Employee
+from pyzbar.pyzbar import decode
+from PIL import Image
+import io
+import base64
 
 class QRLoginView(ft.View):
     """
@@ -11,7 +15,10 @@ class QRLoginView(ft.View):
         super().__init__()
         self.page = page
         self.route = "/"
-        
+
+        self.file_picker = ft.FilePicker(on_result=self.on_file_selected)
+        self.page.overlay.append(self.file_picker)
+
         # Create the two button containers
         scan_button = ft.Container(
             content=ft.Column(
@@ -34,7 +41,7 @@ class QRLoginView(ft.View):
             width=200,
             height=200
         )
-        
+
         upload_button = ft.Container(
             content=ft.Column(
                 [
@@ -157,14 +164,33 @@ class QRLoginView(ft.View):
         self.page.update()
 
     def handle_upload_click(self, e):
-        # Handle QR code upload
-        self.page.snack_bar = ft.SnackBar(ft.Text("Upload QR code functionality would be implemented here."), open=True)
-        self.page.update()
+        # Open file picker to upload QR code image
+        self.file_picker.pick_files(allow_multiple=False, allowed_extensions=["png", "jpg", "jpeg"])
+    
+    def on_file_selected(self, e: ft.FilePickerResultEvent):
+        if e.files:
+            file = e.files[0]
+            try:
+                # Read image bytes
+                image_bytes = file.read_bytes()
+                image = Image.open(io.BytesIO(image_bytes))
+                decoded_objects = decode(image)
+                if decoded_objects:
+                    qr_code = decoded_objects[0].data.decode("utf-8")
+                    self.authenticate_qr_code(qr_code)
+                else:
+                    self.page.snack_bar = ft.SnackBar(ft.Text("No QR code found in the image."), open=True)
+                    self.page.update()
+            except Exception as ex:
+                self.page.snack_bar = ft.SnackBar(ft.Text(f"Failed to decode QR code: {ex}"), open=True)
+                self.page.update()
+        else:
+            self.page.snack_bar = ft.SnackBar(ft.Text("No file selected."), open=True)
+            self.page.update()
 
-    def handle_login(self, e):
-        qr_code = self.qr_code_field.value
+    def authenticate_qr_code(self, qr_code):
         if not qr_code:
-            self.page.snack_bar = ft.SnackBar(ft.Text("Please enter a QR code."), open=True)
+            self.page.snack_bar = ft.SnackBar(ft.Text("Invalid QR code."), open=True)
             self.page.update()
             return
 
