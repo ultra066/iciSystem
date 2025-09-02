@@ -4,6 +4,7 @@ import flet as ft
 from database import initialize_db
 from auth import initialize_admin
 from employee.qr_login import QRLoginView
+from employee.create_account import CreateAccountView
 from employee.dashboard import UserDashboardView
 from employee.profile import UserProfileView
 from admin.dashboard import AdminDashboardView
@@ -30,6 +31,8 @@ def main(page: ft.Page):
         # User Views
         if page.route == "/":
             page.views.append(QRLoginView(page=page))
+        elif page.route == "/create_account":
+            page.views.append(CreateAccountView(page=page))
         elif page.route == "/user/dashboard":
             page.views.append(UserDashboardView(page=page, employee=page.employee))
         elif page.route == "/user/profile":

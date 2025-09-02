@@ -73,7 +73,8 @@ class AdminAttendanceView(ft.View):
         
     def load_attendance_data(self):
         self.data_table.rows.clear()
-        db.connect()
+        if not db.is_connection_usable():
+            db.connect()
         try:
             query = Attendance.select().where(Attendance.date == self.selected_date)
             for record in query:
@@ -92,7 +93,8 @@ class AdminAttendanceView(ft.View):
         except Exception as ex:
             self.page.snack_bar = ft.SnackBar(ft.Text(f"Error loading data: {ex}"), open=True)
         finally:
-            db.close()
+            if db.is_connection_usable():
+                db.close()
             self.page.update()
 
     def did_mount(self):

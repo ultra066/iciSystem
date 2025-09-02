@@ -12,8 +12,13 @@ def initialize_db():
     from models.employee import Employee
     from models.attendance import Attendance
 
-    db.connect()
+    if not db.is_connection_usable():
+        db.connect()
+    # Drop and recreate Employee table to apply schema changes
+    if Employee.table_exists():
+        Employee.drop_table()
     # Create tables if they don't exist
     db.create_tables([Admin, Department, Employee, Attendance])
-    db.close()
+    if db.is_connection_usable():
+        db.close()
 

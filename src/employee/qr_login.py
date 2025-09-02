@@ -98,6 +98,17 @@ class QRLoginView(ft.View):
                                                         upload_button
                                                     ],
                                                     alignment=ft.MainAxisAlignment.CENTER
+                                                ),
+                                                ft.Divider(height=20, color=ft.Colors.TRANSPARENT),
+                                                ft.ElevatedButton(
+                                                    "CREATE ACCOUNT",
+                                                    on_click=lambda e: self.page.go("/create_account"),
+                                                    style=ft.ButtonStyle(
+                                                        shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(20)),
+                                                        bgcolor=ft.Colors.DEEP_PURPLE_ACCENT_400,
+                                                        color=ft.Colors.WHITE,
+                                                        padding=ft.padding.symmetric(horizontal=20, vertical=20)
+                                                    )
                                                 )
                                             ],
                                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,

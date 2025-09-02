@@ -14,7 +14,8 @@ from peewee import fn
 def fetch_monthly_summary_data():
     """Fetch monthly attendance summary data for the current month"""
     try:
-        db.connect()
+        if not db.is_connection_usable():
+            db.connect()
         current_month = datetime.now().month
         current_year = datetime.now().year
         
@@ -75,7 +76,8 @@ def fetch_monthly_summary_data():
 def fetch_today_attendance_data():
     """Fetch today's attendance data for the time-in/time-out component"""
     try:
-        db.connect()
+        if not db.is_connection_usable():
+            db.connect()
         today_date = datetime.now().date()
         
         # Get all employees with their attendance for today
@@ -99,9 +101,10 @@ def fetch_today_attendance_data():
                 time_in = 'Not clocked in'
                 time_out = 'Not clocked out'
             
+            full_name = f"{employee.first_name} {employee.middle_name + ' ' if employee.middle_name else ''}{employee.last_name}"
             attendance_data.append({
-                'name': employee.name,
-                'initials': employee.initials if employee.initials else employee.name[:2].upper(),
+                'name': full_name,
+                'initials': employee.initials if employee.initials else full_name[:2].upper(),
                 'dept': employee.department.name if employee.department else 'N/A',
                 'time_in': time_in,
                 'time_out': time_out
@@ -190,13 +193,15 @@ class AdminDashboardView(ft.View):
 
     def create_info_cards(self):
         try:
-            db.connect()
+            if not db.is_connection_usable():
+                db.connect()
             # Calculate stats
             total_employees = Employee.select().count()
             today_date = datetime.now().date()
             present_employees = Attendance.select().where(Attendance.date == today_date).count()
         finally:
-            db.close()
+            if db.is_connection_usable():
+                db.close()
         
         return ft.Row(
             [
