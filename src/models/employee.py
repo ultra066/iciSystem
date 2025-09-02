@@ -2,12 +2,14 @@ import peewee
 from database import db
 from datetime import datetime
 from models.department import Department
+import uuid
 
 class Employee(peewee.Model):
     """
     Represents an employee in the database.
 
     Fields:
+        - id (str): Randomized UUID primary key for uniqueness.
         - employee_id (str): Unique identifier for the employee.
         - first_name (str): Employee's first name.
         - middle_name (str): Employee's middle name.
@@ -18,6 +20,7 @@ class Employee(peewee.Model):
         - created_at (datetime): Timestamp of creation.
         - updated_at (datetime): Timestamp of the last update.
     """
+    id = peewee.CharField(primary_key=True, default=lambda: str(uuid.uuid4()))
     employee_id = peewee.CharField(unique=True)
     first_name = peewee.CharField()
     middle_name = peewee.CharField(null=True)
