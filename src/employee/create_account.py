@@ -3,6 +3,7 @@ from database import db
 from models.employee import Employee
 from models.department import Department
 import uuid
+from qr_manager import generate_qr_code
 
 class CreateAccountView(ft.View):
     """
@@ -169,7 +170,7 @@ class CreateAccountView(ft.View):
             employee_id = str(uuid.uuid4())[:8]  # Generate short unique ID
             qr_code = str(uuid.uuid4())  # Generate QR code
 
-            Employee.create(
+            employee = Employee.create(
                 employee_id=employee_id,
                 first_name=first_name,
                 middle_name=middle_name,
@@ -178,10 +179,16 @@ class CreateAccountView(ft.View):
                 qr_code=qr_code
             )
 
-            self.page.snack_bar = ft.SnackBar(ft.Text("Account created successfully! Your QR code is ready."), open=True)
-            self.page.update()
-            # Optionally, navigate back or to login
-            self.page.go("/")
+            # Generate QR code image
+            qr_filename = f"{employee_id}_qr.png"
+            generate_qr_code(qr_code, qr_filename)
+            qr_image_path = f"assets/qr_codes/{qr_filename}"
+
+            # Navigate to QR display page
+            self.page.employee = employee
+            self.page.qr_image_path = qr_image_path
+            self.page.qr_filename = qr_filename
+            self.page.go("/qr_display")
         except Exception as ex:
             self.page.snack_bar = ft.SnackBar(ft.Text(f"Error creating account: {str(ex)}"), open=True)
             self.page.update()

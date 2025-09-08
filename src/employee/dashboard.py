@@ -16,6 +16,9 @@ class UserDashboardView(ft.View):
         self.employee = employee
         self.route = "/user/dashboard"
         self.page.bgcolor = "#F0F2F5"
+        print(f"UserDashboardView created with employee: {employee}")
+        if employee:
+            print(f"Dashboard for: {employee.first_name} {employee.last_name}")
         
         self.status_text = ft.Text(size=24, weight="bold")
         self.time_text = ft.Text(datetime.now().strftime("%H:%M:%S"), size=48, weight="bold")
@@ -33,7 +36,7 @@ class UserDashboardView(ft.View):
                 [
                     ft.Column(
                         [
-                            ft.Text(f"Welcome, {self.employee.name}!", size=36, weight="bold"),
+                            ft.Text(f"Welcome, {self.employee.first_name if self.employee else 'Unknown'} {self.employee.last_name if self.employee else 'User'}!", size=36, weight="bold"),
                             ft.Text("Your Attendance Status", size=24, weight="w600", color="gray"),
                             ft.Container(
                                 content=ft.Column(

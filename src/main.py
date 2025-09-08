@@ -5,6 +5,7 @@ from database import initialize_db
 from auth import initialize_admin
 from employee.qr_login import QRLoginView
 from employee.create_account import CreateAccountView
+from employee.qr_code_display import QRCodeDisplayView
 from employee.dashboard import UserDashboardView
 from employee.profile import UserProfileView
 from admin.dashboard import AdminDashboardView
@@ -33,7 +34,12 @@ def main(page: ft.Page):
             page.views.append(QRLoginView(page=page))
         elif page.route == "/create_account":
             page.views.append(CreateAccountView(page=page))
+        elif page.route == "/qr_display":
+            page.views.append(QRCodeDisplayView(page=page, employee=page.employee, qr_image_path=page.qr_image_path))
         elif page.route == "/user/dashboard":
+            print(f"Routing to /user/dashboard, page.employee: {page.employee}")
+            if page.employee:
+                print(f"Employee: {page.employee.first_name} {page.employee.last_name}")
             page.views.append(UserDashboardView(page=page, employee=page.employee))
         elif page.route == "/user/profile":
             page.views.append(UserProfileView(page=page, employee=page.employee))

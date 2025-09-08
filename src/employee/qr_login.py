@@ -171,12 +171,14 @@ class QRLoginView(ft.View):
         if e.files:
             file = e.files[0]
             try:
-                # Read image bytes
-                image_bytes = file.read_bytes()
+                # Read image from file path
+                with open(file.path, "rb") as f:
+                    image_bytes = f.read()
                 image = Image.open(io.BytesIO(image_bytes))
                 decoded_objects = decode(image)
                 if decoded_objects:
                     qr_code = decoded_objects[0].data.decode("utf-8")
+                    print(f"Decoded QR code: '{qr_code}'")
                     self.authenticate_qr_code(qr_code)
                 else:
                     self.page.snack_bar = ft.SnackBar(ft.Text("No QR code found in the image."), open=True)
@@ -197,10 +199,18 @@ class QRLoginView(ft.View):
         db.connect()
         try:
             employee = Employee.get(Employee.qr_code == qr_code)
+            print(f"Employee found: {employee.first_name} {employee.last_name}, QR: {employee.qr_code}")
             self.page.employee = employee
+            print(f"Set page.employee: {self.page.employee}")
+            print("Navigating to /user/dashboard")
             self.page.go("/user/dashboard")
         except Employee.DoesNotExist:
+            print(f"Employee not found for QR code: {qr_code}")
             self.page.snack_bar = ft.SnackBar(ft.Text("Invalid QR code. Please try again."), open=True)
+            self.page.update()
+        except Exception as ex:
+            print(f"Error during authentication: {ex}")
+            self.page.snack_bar = ft.SnackBar(ft.Text(f"Authentication error: {ex}"), open=True)
             self.page.update()
         finally:
             db.close()

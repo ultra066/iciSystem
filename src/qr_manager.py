@@ -10,7 +10,7 @@ def generate_qr_code(data: str, filename: str):
     Generates a QR code from data and saves it to a file.
     """
     try:
-        qr_dir = "qr_codes"
+        qr_dir = "assets/qr_codes"
         if not os.path.exists(qr_dir):
             os.makedirs(qr_dir)
             
