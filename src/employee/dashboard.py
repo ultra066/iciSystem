@@ -23,7 +23,7 @@ class UserDashboardView(ft.View):
         self.status_text = ft.Text(size=24, weight="bold")
         self.time_text = ft.Text(datetime.now().strftime("%H:%M:%S"), size=48, weight="bold")
         self.clock_button = ft.ElevatedButton(
-            text="",
+            text="Time In",
             on_click=self.handle_clock,
             bgcolor=ft.Colors.with_opacity(0.8, ft.Colors.WHITE),
             style=ft.ButtonStyle(

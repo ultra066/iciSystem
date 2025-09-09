@@ -36,7 +36,6 @@ class CreateAccountView(ft.View):
         self.department_dropdown = ft.Dropdown(
             label="Department",
             options=self.department_options,
-            icon=ft.Icons.BUSINESS,
             on_change=self.handle_department_change
         )
 
