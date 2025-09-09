@@ -1,7 +1,7 @@
 from peewee import SqliteDatabase
 
 # Create a single database connection object
-db = SqliteDatabase('attendance.db')
+db = SqliteDatabase('../attendance_system/attendance.db')
 
 def initialize_db():
     """
@@ -14,9 +14,6 @@ def initialize_db():
 
     if not db.is_connection_usable():
         db.connect()
-    # Drop and recreate Employee table to apply schema changes
-    if Employee.table_exists():
-        Employee.drop_table()
     # Create tables if they don't exist
     db.create_tables([Admin, Department, Employee, Attendance])
     if db.is_connection_usable():

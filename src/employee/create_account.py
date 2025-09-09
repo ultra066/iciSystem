@@ -177,6 +177,7 @@ class CreateAccountView(ft.View):
                 department=department,
                 qr_code=qr_code
             )
+            print(f"Employee created: {employee.employee_id} - {employee.first_name} {employee.last_name}")
 
             # Generate QR code image
             qr_filename = f"{employee_id}_qr.png"
