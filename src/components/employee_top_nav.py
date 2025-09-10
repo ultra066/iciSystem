@@ -14,7 +14,7 @@ class EmployeeTopNavigation(ft.Container):
                 src=r"images/INNOVATIVE-LOGO.png",  # Placeholder for your image path
                 fit=ft.ImageFit.CONTAIN
             ),
-            on_click=lambda _: self.page.go("/user/dashboard"),
+            on_click=lambda _: self.page.go("/employee/dashboard"),
             height=50,
             alignment=ft.alignment.center
         )
@@ -23,7 +23,7 @@ class EmployeeTopNavigation(ft.Container):
         self.dashboard_btn = ft.TextButton(
             text="Dashboard",
             icon=ft.Icons.DASHBOARD,
-            on_click=lambda e: self.page.go("/user/dashboard"),
+            on_click=lambda e: self.page.go("/employee/dashboard"),
             style=ft.ButtonStyle(
                 color=ft.Colors.WHITE,
                 overlay_color=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),

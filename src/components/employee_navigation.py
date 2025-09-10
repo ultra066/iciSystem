@@ -19,7 +19,7 @@ class EmployeeNavigation(ft.Container):
                     border_radius=ft.border_radius.all(30),
                     bgcolor=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
                     alignment=ft.alignment.center,
-                    on_click=lambda _: self.page.go("/user/profile")
+                on_click=lambda _: self.page.go("/employee/profile")
                 ),
 
                 # Attendance Button
@@ -30,7 +30,7 @@ class EmployeeNavigation(ft.Container):
                     border_radius=ft.border_radius.all(30),
                     bgcolor=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
                     alignment=ft.alignment.center,
-                    on_click=lambda _: self.page.go("/user/attendance")
+                    on_click=lambda _: self.page.go("/employee/attendance")
                 ),
 
                 # Placeholder to fill remaining space

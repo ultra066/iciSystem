@@ -14,8 +14,8 @@ class UserDashboardView(ft.View):
         super().__init__()
         self.page = page
         self.employee = employee
-        self.route = "/user/dashboard"
-        self.page.bgcolor = "#F0F2F5"
+        self.route = "/employee/dashboard"
+        self.page.bgcolor = "#F9F1E0"
         print(f"UserDashboardView created with employee: {employee}")
         if employee:
             print(f"Dashboard for: {employee.first_name} {employee.last_name}")
@@ -55,7 +55,7 @@ class UserDashboardView(ft.View):
                             ),
                             ft.ElevatedButton(
                                 text="View Profile",
-                                on_click=lambda _: self.page.go("/user/profile"),
+                                on_click=lambda _: self.page.go("/employee/profile"),
                                 style=ft.ButtonStyle(
                                     shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
                                 )

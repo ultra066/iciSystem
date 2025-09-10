@@ -70,7 +70,7 @@ class AdminAttendanceView(ft.View):
                 self.attendance_table.rows.append(
                     ft.DataRow(
                         cells=[
-                            ft.DataCell(ft.Text(record.employee.name)),
+                            ft.DataCell(ft.Text(f"{record.employee.first_name} {record.employee.last_name}")),
                             ft.DataCell(ft.Text(record.date.strftime("%Y-%m-%d"))),
                             ft.DataCell(ft.Text(record.time_in.strftime("%I:%M %p"))),
                             ft.DataCell(ft.Text(record.time_out.strftime("%I:%M %p") if record.time_out else "N/A")),

@@ -11,7 +11,7 @@ class UserProfileView(ft.View):
         super().__init__()
         self.page = page
         self.employee = employee
-        self.route = "/user/profile"
+        self.route = "/employee/profile"
         self.page.bgcolor = "#F0F2F5"
 
         self.controls = [
@@ -25,11 +25,11 @@ class UserProfileView(ft.View):
                                 content=ft.Column(
                                     [
                                         ft.CircleAvatar(
-                                            content=ft.Text(self.employee.initials, size=30, weight="bold", color="white"),
+                                            content=ft.Text(self.employee.initials if self.employee.initials else f"{self.employee.first_name[0]}{self.employee.last_name[0]}".upper(), size=30, weight="bold", color="white"),
                                             radius=50,
                                             bgcolor=ft.Colors.DEEP_PURPLE_ACCENT_400
                                         ),
-                                        ft.Text(self.employee.name, size=28, weight="bold"),
+                                        ft.Text(f"{self.employee.first_name} {self.employee.last_name}", size=28, weight="bold"),
                                         ft.Text(f"Employee ID: {self.employee.employee_id}", size=18, color="gray"),
                                         ft.Text(f"Department: {self.employee.department.name}", size=18, color="gray"),
                                     ],

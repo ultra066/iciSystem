@@ -138,4 +138,4 @@ class QRCodeDisplayView(ft.View):
     def handle_next(self, e):
         # Proceed to user dashboard
         self.page.employee = self.employee
-        self.page.go("/user/dashboard")
+        self.page.go("/employee/dashboard")

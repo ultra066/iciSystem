@@ -203,7 +203,7 @@ class QRLoginView(ft.View):
             self.page.employee = employee
             print(f"Set page.employee: {self.page.employee}")
             print("Navigating to /user/dashboard")
-            self.page.go("/user/dashboard")
+            self.page.go("/employee/dashboard")
         except Employee.DoesNotExist:
             print(f"Employee not found for QR code: {qr_code}")
             self.page.snack_bar = ft.SnackBar(ft.Text("Invalid QR code. Please try again."), open=True)
