@@ -4,6 +4,8 @@ from models.employee import Employee
 from models.attendance import Attendance
 from datetime import datetime
 from peewee import fn
+from components.employee_navigation import EmployeeNavigation
+from components.employee_top_nav import EmployeeTopNavigation
 
 class UserDashboardView(ft.View):
     """
@@ -16,10 +18,15 @@ class UserDashboardView(ft.View):
         self.employee = employee
         self.route = "/employee/dashboard"
         self.page.bgcolor = "#F9F1E0"
+        self.page.theme_mode = ft.ThemeMode.LIGHT
+        self.bgcolor = "#F9F1E0"
         print(f"UserDashboardView created with employee: {employee}")
         if employee:
             print(f"Dashboard for: {employee.first_name} {employee.last_name}")
-        
+
+        self.top_nav = EmployeeTopNavigation(self.page)
+        self.side_nav = EmployeeNavigation(self.page)
+
         self.status_text = ft.Text(size=24, weight="bold")
         self.time_text = ft.Text(datetime.now().strftime("%H:%M:%S"), size=48, weight="bold")
         self.clock_button = ft.ElevatedButton(
@@ -31,42 +38,52 @@ class UserDashboardView(ft.View):
             )
         )
 
-        self.controls = [
-            ft.Row(
-                [
-                    ft.Column(
+        main_content = ft.Column(
+            [
+                ft.Text(f"Welcome, {self.employee.first_name if self.employee else 'Unknown'} {self.employee.last_name if self.employee else 'User'}!", size=36, weight="bold"),
+                ft.Text("Your Attendance Status", size=24, weight="w600", color="gray"),
+                ft.Container(
+                    content=ft.Column(
                         [
-                            ft.Text(f"Welcome, {self.employee.first_name if self.employee else 'Unknown'} {self.employee.last_name if self.employee else 'User'}!", size=36, weight="bold"),
-                            ft.Text("Your Attendance Status", size=24, weight="w600", color="gray"),
-                            ft.Container(
-                                content=ft.Column(
-                                    [
-                                        self.time_text,
-                                        self.status_text,
-                                        ft.Divider(height=20),
-                                        self.clock_button
-                                    ],
-                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
-                                ),
-                                padding=ft.padding.all(30),
-                                border_radius=ft.border_radius.all(20),
-                                bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
-                                alignment=ft.alignment.center
-                            ),
-                            ft.ElevatedButton(
-                                text="View Profile",
-                                on_click=lambda _: self.page.go("/employee/profile"),
-                                style=ft.ButtonStyle(
-                                    shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
-                                )
-                            )
+                            self.time_text,
+                            self.status_text,
+                            ft.Divider(height=20),
+                            self.clock_button
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        expand=True
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                    ),
+                    padding=ft.padding.all(30),
+                    border_radius=ft.border_radius.all(20),
+                    bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
+                    alignment=ft.alignment.center
+                ),
+                ft.ElevatedButton(
+                    text="View Profile",
+                    on_click=lambda _: self.page.go("/employee/profile"),
+                    style=ft.ButtonStyle(
+                        shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
+                    )
+                )
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            expand=True
+        )
+
+        self.controls = [
+            ft.Column(
+                [
+                    self.top_nav,
+                    ft.Row(
+                        [
+                            self.side_nav,
+                            main_content
+                        ],
+                        expand=True,
+                        alignment=ft.MainAxisAlignment.START,
+                        vertical_alignment=ft.CrossAxisAlignment.START,
                     )
                 ],
-                alignment=ft.MainAxisAlignment.CENTER,
                 expand=True
             )
         ]
@@ -74,14 +91,14 @@ class UserDashboardView(ft.View):
     def handle_clock(self, e):
         db.connect()
         today_date = datetime.now().date()
-        
+
         # Check if the user already has an attendance record for today
         try:
             today_record = Attendance.get(
                 Attendance.employee == self.employee,
                 Attendance.date == today_date
             )
-            
+
             # If a record exists but time_out is null, it means they need to clock out
             if today_record.time_out is None:
                 today_record.time_out = datetime.now()
@@ -99,11 +116,11 @@ class UserDashboardView(ft.View):
                 status="Present"
             )
             self.page.snack_bar = ft.SnackBar(ft.Text("Successfully clocked in!"), open=True)
-            
+
         finally:
             db.close()
             self.update_status()
-            
+
     def update_status(self):
         db.connect()
         try:

@@ -17,7 +17,7 @@ class EmployeeNavigation(ft.Container):
                     width=60,
                     height=60,
                     border_radius=ft.border_radius.all(30),
-                    bgcolor=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
+                    bgcolor="#DB7929",
                     alignment=ft.alignment.center,
                 on_click=lambda _: self.page.go("/employee/profile")
                 ),
@@ -28,7 +28,7 @@ class EmployeeNavigation(ft.Container):
                     width=60,
                     height=60,
                     border_radius=ft.border_radius.all(30),
-                    bgcolor=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
+                    bgcolor="#DB7929",
                     alignment=ft.alignment.center,
                     on_click=lambda _: self.page.go("/employee/attendance")
                 ),
@@ -45,7 +45,7 @@ class EmployeeNavigation(ft.Container):
                     width=60,
                     height=60,
                     border_radius=ft.border_radius.all(30),
-                    bgcolor=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
+                    bgcolor="#DB7929",
                     alignment=ft.alignment.center,
                     on_click=lambda _: self.page.go("/")
                 ),

@@ -2,6 +2,8 @@ import flet as ft
 from database import db
 from models.employee import Employee
 from utils import get_initials
+from components.employee_navigation import EmployeeNavigation
+from components.employee_top_nav import EmployeeTopNavigation
 
 class UserProfileView(ft.View):
     """
@@ -13,49 +15,64 @@ class UserProfileView(ft.View):
         self.page = page
         self.employee = employee
         self.route = "/employee/profile"
-        self.page.bgcolor = "#F0F2F5"
+        self.page.bgcolor = "#F9F1E0"
+        self.page.theme_mode = ft.ThemeMode.LIGHT
+        self.bgcolor = "#F9F1E0"
+
+        self.top_nav = EmployeeTopNavigation(self.page)
+        self.side_nav = EmployeeNavigation(self.page)
+
+        main_content = ft.Column(
+            [
+                ft.Text("My Profile", size=36, weight="bold"),
+                ft.Divider(height=20),
+                ft.Container(
+                    content=ft.Column(
+                        [
+                            ft.CircleAvatar(
+                                content=ft.Text(self.employee.initials if self.employee.initials else get_initials(f"{self.employee.first_name} {self.employee.middle_name or ''} {self.employee.last_name}"), size=30, weight="bold", color="white"),
+                                radius=50,
+                                bgcolor=ft.Colors.DEEP_PURPLE_ACCENT_400
+                            ),
+                            ft.Text(f"{self.employee.first_name} {self.employee.middle_name + ' ' if self.employee.middle_name else ''}{self.employee.last_name}", size=28, weight="bold"),
+                            ft.Text(f"Employee ID: {self.employee.employee_id}", size=18, color="gray"),
+                            ft.Text(f"Department: {self.employee.department.name}", size=18, color="gray"),
+                        ],
+                        alignment=ft.CrossAxisAlignment.CENTER
+                    ),
+                    padding=ft.padding.all(30),
+                    border_radius=ft.border_radius.all(20),
+                    bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
+                    alignment=ft.alignment.center
+                ),
+                ft.ElevatedButton(
+                    text="Logout",
+                    on_click=lambda _: self.page.go("/"),
+                    style=ft.ButtonStyle(
+                        bgcolor=ft.Colors.RED_ACCENT_400,
+                        shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
+                    )
+                )
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            expand=True
+        )
 
         self.controls = [
-            ft.Row(
+            ft.Column(
                 [
-                    ft.Column(
+                    self.top_nav,
+                    ft.Row(
                         [
-                            ft.Text("My Profile", size=36, weight="bold"),
-                            ft.Divider(height=20),
-                            ft.Container(
-                                content=ft.Column(
-                                    [
-                                        ft.CircleAvatar(
-                                            content=ft.Text(self.employee.initials if self.employee.initials else get_initials(f"{self.employee.first_name} {self.employee.middle_name or ''} {self.employee.last_name}"), size=30, weight="bold", color="white"),
-                                            radius=50,
-                                            bgcolor=ft.Colors.DEEP_PURPLE_ACCENT_400
-                                        ),
-                                        ft.Text(f"{self.employee.first_name} {self.employee.middle_name + ' ' if self.employee.middle_name else ''}{self.employee.last_name}", size=28, weight="bold"),
-                                        ft.Text(f"Employee ID: {self.employee.employee_id}", size=18, color="gray"),
-                                        ft.Text(f"Department: {self.employee.department.name}", size=18, color="gray"),
-                                    ],
-                                    alignment=ft.CrossAxisAlignment.CENTER
-                                ),
-                                padding=ft.padding.all(30),
-                                border_radius=ft.border_radius.all(20),
-                                bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
-                                alignment=ft.alignment.center
-                            ),
-                            ft.ElevatedButton(
-                                text="Logout",
-                                on_click=lambda _: self.page.go("/"),
-                                style=ft.ButtonStyle(
-                                    bgcolor=ft.Colors.RED_ACCENT_400,
-                                    shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
-                                )
-                            )
+                            self.side_nav,
+                            main_content
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        expand=True
+                        expand=True,
+                        alignment=ft.MainAxisAlignment.START,
+                        vertical_alignment=ft.CrossAxisAlignment.START,
                     )
                 ],
-                alignment=ft.MainAxisAlignment.CENTER,
                 expand=True
             )
         ]

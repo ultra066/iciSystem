@@ -25,7 +25,7 @@ class EmployeeTopNavigation(ft.Container):
             icon=ft.Icons.DASHBOARD,
             on_click=lambda e: self.page.go("/employee/dashboard"),
             style=ft.ButtonStyle(
-                color=ft.Colors.WHITE,
+                color="#EF3334",
                 overlay_color=ft.Colors.with_opacity(0.1, ft.Colors.WHITE),
             )
         )
