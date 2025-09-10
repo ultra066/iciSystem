@@ -4,6 +4,7 @@ from models.employee import Employee
 from models.attendance import Attendance
 from datetime import datetime
 from peewee import fn
+from utils import get_initials
 from components.employee_navigation import EmployeeNavigation
 from components.employee_top_nav import EmployeeTopNavigation
 
@@ -29,10 +30,41 @@ class UserDashboardView(ft.View):
 
         self.status_text = ft.Text(size=24, weight="bold")
         self.time_text = ft.Text(datetime.now().strftime("%H:%M:%S"), size=48, weight="bold")
-        self.clock_button = ft.ElevatedButton(
+        # Removed old clock_button since replaced by two buttons
+        # self.clock_button = ft.ElevatedButton(
+        #     text="Time In",
+        #     on_click=self.handle_clock,
+        #     bgcolor=ft.Colors.with_opacity(0.8, ft.Colors.WHITE),
+        #     style=ft.ButtonStyle(
+        #         shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
+        #     )
+        # )
+
+        # Create time and day text for top-left corner
+        self.time_day_text = ft.Text(datetime.now().strftime("%I:%M %p") + "  " + datetime.now().strftime("%A"), size=20, weight="bold")
+        self.date_text = ft.Text(datetime.now().strftime("%B %d, %Y"), size=16)
+
+        # Create initials and department text
+        full_name = f"{self.employee.first_name} {self.employee.middle_name or ''} {self.employee.last_name}".strip()
+        initials = self.employee.initials if self.employee and self.employee.initials else get_initials(full_name)
+        department_name = self.employee.department.name if self.employee and self.employee.department else "No Department"
+
+        self.initials_text = ft.Text(initials, size=36, weight="bold")
+        self.department_text = ft.Text(department_name, size=18)
+
+        # Create separate Time In and Time Out buttons
+        self.time_in_button = ft.ElevatedButton(
             text="Time In",
-            on_click=self.handle_clock,
-            bgcolor=ft.Colors.with_opacity(0.8, ft.Colors.WHITE),
+            on_click=self.handle_time_in,
+            bgcolor=ft.Colors.RED,
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
+            )
+        )
+        self.time_out_button = ft.ElevatedButton(
+            text="Time Out",
+            on_click=self.handle_time_out,
+            bgcolor=ft.Colors.RED,
             style=ft.ButtonStyle(
                 shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
             )
@@ -40,22 +72,40 @@ class UserDashboardView(ft.View):
 
         main_content = ft.Column(
             [
-                ft.Text(f"Welcome, {self.employee.first_name if self.employee else 'Unknown'} {self.employee.last_name if self.employee else 'User'}!", size=36, weight="bold"),
-                ft.Text("Your Attendance Status", size=24, weight="w600", color="gray"),
-                ft.Container(
-                    content=ft.Column(
-                        [
-                            self.time_text,
-                            self.status_text,
-                            ft.Divider(height=20),
-                            self.clock_button
-                        ],
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
-                    ),
-                    padding=ft.padding.all(30),
-                    border_radius=ft.border_radius.all(20),
-                    bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
-                    alignment=ft.alignment.center
+                ft.Row(
+                    [
+                        ft.Column(
+                            [
+                                self.time_day_text,
+                                self.date_text
+                            ],
+                            alignment=ft.CrossAxisAlignment.START,
+                            horizontal_alignment=ft.CrossAxisAlignment.START,
+                            expand=False
+                        ),
+                        ft.Container(expand=True)  # Spacer
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    vertical_alignment=ft.CrossAxisAlignment.START,
+                    expand=True
+                ),
+                ft.Column(
+                    [
+                        self.initials_text,
+                        self.department_text,
+                        ft.Row(
+                            [
+                                self.time_in_button,
+                                self.time_out_button
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            spacing=20
+                        ),
+                        self.status_text
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=10
                 )
             ],
             alignment=ft.MainAxisAlignment.CENTER,
@@ -81,27 +131,22 @@ class UserDashboardView(ft.View):
             )
         ]
 
-    def handle_clock(self, e):
+    def handle_time_in(self, e):
         db.connect()
         today_date = datetime.now().date()
-
-        # Check if the user already has an attendance record for today
         try:
             today_record = Attendance.get(
                 Attendance.employee == self.employee,
                 Attendance.date == today_date
             )
-
-            # If a record exists but time_out is null, it means they need to clock out
-            if today_record.time_out is None:
-                today_record.time_out = datetime.now()
-                today_record.save()
-                self.page.snack_bar = ft.SnackBar(ft.Text("Successfully clocked out!"), open=True)
+            if today_record.time_in is not None:
+                self.page.snack_bar = ft.SnackBar(ft.Text("You have already clocked in for the day."), open=True)
             else:
-                self.page.snack_bar = ft.SnackBar(ft.Text("You have already clocked out for the day."), open=True)
-
+                today_record.time_in = datetime.now()
+                today_record.status = "Present"
+                today_record.save()
+                self.page.snack_bar = ft.SnackBar(ft.Text("Successfully clocked in!"), open=True)
         except Attendance.DoesNotExist:
-            # If no record exists, create a new one for clock-in
             Attendance.create(
                 employee=self.employee,
                 time_in=datetime.now(),
@@ -109,7 +154,26 @@ class UserDashboardView(ft.View):
                 status="Present"
             )
             self.page.snack_bar = ft.SnackBar(ft.Text("Successfully clocked in!"), open=True)
+        finally:
+            db.close()
+            self.update_status()
 
+    def handle_time_out(self, e):
+        db.connect()
+        today_date = datetime.now().date()
+        try:
+            today_record = Attendance.get(
+                Attendance.employee == self.employee,
+                Attendance.date == today_date
+            )
+            if today_record.time_out is not None:
+                self.page.snack_bar = ft.SnackBar(ft.Text("You have already clocked out for the day."), open=True)
+            else:
+                today_record.time_out = datetime.now()
+                today_record.save()
+                self.page.snack_bar = ft.SnackBar(ft.Text("Successfully clocked out!"), open=True)
+        except Attendance.DoesNotExist:
+            self.page.snack_bar = ft.SnackBar(ft.Text("You have not clocked in yet."), open=True)
         finally:
             db.close()
             self.update_status()
