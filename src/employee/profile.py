@@ -1,6 +1,7 @@
 import flet as ft
 from database import db
 from models.employee import Employee
+from utils import get_initials
 
 class UserProfileView(ft.View):
     """
@@ -25,11 +26,11 @@ class UserProfileView(ft.View):
                                 content=ft.Column(
                                     [
                                         ft.CircleAvatar(
-                                            content=ft.Text(self.employee.initials if self.employee.initials else f"{self.employee.first_name[0]}{self.employee.last_name[0]}".upper(), size=30, weight="bold", color="white"),
+                                            content=ft.Text(self.employee.initials if self.employee.initials else get_initials(f"{self.employee.first_name} {self.employee.middle_name or ''} {self.employee.last_name}"), size=30, weight="bold", color="white"),
                                             radius=50,
                                             bgcolor=ft.Colors.DEEP_PURPLE_ACCENT_400
                                         ),
-                                        ft.Text(f"{self.employee.first_name} {self.employee.last_name}", size=28, weight="bold"),
+                                        ft.Text(f"{self.employee.first_name} {self.employee.middle_name + ' ' if self.employee.middle_name else ''}{self.employee.last_name}", size=28, weight="bold"),
                                         ft.Text(f"Employee ID: {self.employee.employee_id}", size=18, color="gray"),
                                         ft.Text(f"Department: {self.employee.department.name}", size=18, color="gray"),
                                     ],

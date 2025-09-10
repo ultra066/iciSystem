@@ -4,6 +4,7 @@ from models.employee import Employee
 from models.department import Department
 import uuid
 from qr_manager import generate_qr_code
+from utils import get_initials
 
 class CreateAccountView(ft.View):
     """
@@ -177,6 +178,10 @@ class CreateAccountView(ft.View):
                 department=department,
                 qr_code=qr_code
             )
+            # Set initials
+            full_name = f"{first_name} {middle_name} {last_name}" if middle_name else f"{first_name} {last_name}"
+            employee.initials = get_initials(full_name)
+            employee.save()
             print(f"Employee created: {employee.employee_id} - {employee.first_name} {employee.last_name}")
 
             # Generate QR code image

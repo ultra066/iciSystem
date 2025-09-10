@@ -10,6 +10,7 @@ from components.monthly_summary import MonthlySummary
 from components.time_in_time_out import TodayAttendance
 from components.cards import InfoCard
 from peewee import fn
+from utils import get_initials
 
 def fetch_monthly_summary_data():
     """Fetch monthly attendance summary data for the current month"""
@@ -104,7 +105,7 @@ def fetch_today_attendance_data():
             full_name = f"{employee.first_name} {employee.middle_name + ' ' if employee.middle_name else ''}{employee.last_name}"
             attendance_data.append({
                 'name': full_name,
-                'initials': employee.initials if employee.initials else full_name[:2].upper(),
+                'initials': employee.initials if employee.initials else get_initials(full_name),
                 'dept': employee.department.name if employee.department else 'N/A',
                 'time_in': time_in,
                 'time_out': time_out
