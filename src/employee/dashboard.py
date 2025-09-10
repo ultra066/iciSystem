@@ -44,6 +44,10 @@ class UserDashboardView(ft.View):
         self.time_day_text = ft.Text(datetime.now().strftime("%I:%M %p") + "  " + datetime.now().strftime("%A"), size=20, weight="bold")
         self.date_text = ft.Text(datetime.now().strftime("%B %d, %Y"), size=16)
 
+        # Create time-in and time-out display texts
+        self.time_in_display = ft.Text("Time-in: --:--", size=16)
+        self.time_out_display = ft.Text("Time-Out: --:--", size=16)
+
         # Create initials and department text
         full_name = f"{self.employee.first_name} {self.employee.middle_name or ''} {self.employee.last_name}".strip()
         initials = self.employee.initials if self.employee and self.employee.initials else get_initials(full_name)
@@ -77,7 +81,9 @@ class UserDashboardView(ft.View):
                         ft.Column(
                             [
                                 self.time_day_text,
-                                self.date_text
+                                self.date_text,
+                                self.time_in_display,
+                                self.time_out_display
                             ],
                             alignment=ft.CrossAxisAlignment.START,
                             horizontal_alignment=ft.CrossAxisAlignment.START,
@@ -185,15 +191,35 @@ class UserDashboardView(ft.View):
                 Attendance.employee == self.employee,
                 Attendance.date == datetime.now().date()
             )
-            if today_record.time_out is None:
+            # Set time displays
+            if today_record.time_in:
+                self.time_in_display.value = f"Time-in: {today_record.time_in.strftime('%H:%M')}"
+            else:
+                self.time_in_display.value = "Time-in: --:--"
+            if today_record.time_out:
+                self.time_out_display.value = f"Time-Out: {today_record.time_out.strftime('%H:%M')}"
+            else:
+                self.time_out_display.value = "Time-Out: --:--"
+
+            # Set status and button states
+            if today_record.time_in is None:
+                self.status_text.value = "Status: Not Clocked In"
+                self.time_in_button.disabled = False
+                self.time_out_button.disabled = True
+            elif today_record.time_out is None:
                 self.status_text.value = "Status: Clocked In"
-                self.clock_button.text = "Time Out"
+                self.time_in_button.disabled = True
+                self.time_out_button.disabled = False
             else:
                 self.status_text.value = "Status: Clocked Out"
-                self.clock_button.text = "Time In"
+                self.time_in_button.disabled = True
+                self.time_out_button.disabled = True
         except Attendance.DoesNotExist:
-            self.status_text.value = "Status: Clocked Out"
-            self.clock_button.text = "Time In"
+            self.time_in_display.value = "Time-in: --:--"
+            self.time_out_display.value = "Time-Out: --:--"
+            self.status_text.value = "Status: Not Clocked In"
+            self.time_in_button.disabled = False
+            self.time_out_button.disabled = True
         finally:
             db.close()
             self.page.update()
