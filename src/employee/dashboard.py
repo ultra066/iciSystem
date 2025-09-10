@@ -56,13 +56,6 @@ class UserDashboardView(ft.View):
                     border_radius=ft.border_radius.all(20),
                     bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
                     alignment=ft.alignment.center
-                ),
-                ft.ElevatedButton(
-                    text="View Profile",
-                    on_click=lambda _: self.page.go("/employee/profile"),
-                    style=ft.ButtonStyle(
-                        shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(15))
-                    )
                 )
             ],
             alignment=ft.MainAxisAlignment.CENTER,
