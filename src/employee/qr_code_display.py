@@ -101,11 +101,12 @@ class QRCodeDisplayView(ft.View):
                                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                 expand=True
                             ),
-                            margin=ft.margin.only(right=50),
                             width="75%",
                             height="90%"
                         )
                     ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
                     expand=True
                 ),
                 gradient=ft.LinearGradient(
