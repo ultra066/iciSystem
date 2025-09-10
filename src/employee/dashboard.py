@@ -138,7 +138,8 @@ class UserDashboardView(ft.View):
         ]
 
     def handle_time_in(self, e):
-        db.connect()
+        if not db.is_connection_usable():
+            db.connect()
         today_date = datetime.now().date()
         try:
             today_record = Attendance.get(
@@ -165,7 +166,8 @@ class UserDashboardView(ft.View):
             self.update_status()
 
     def handle_time_out(self, e):
-        db.connect()
+        if not db.is_connection_usable():
+            db.connect()
         today_date = datetime.now().date()
         try:
             today_record = Attendance.get(
@@ -185,7 +187,8 @@ class UserDashboardView(ft.View):
             self.update_status()
 
     def update_status(self):
-        db.connect()
+        if not db.is_connection_usable():
+            db.connect()
         try:
             today_record = Attendance.get(
                 Attendance.employee == self.employee,

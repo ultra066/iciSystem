@@ -199,17 +199,12 @@ class QRLoginView(ft.View):
         db.connect()
         try:
             employee = Employee.get(Employee.qr_code == qr_code)
-            print(f"Employee found: {employee.first_name} {employee.last_name}, QR: {employee.qr_code}")
             self.page.employee = employee
-            print(f"Set page.employee: {self.page.employee}")
-            print("Navigating to /user/dashboard")
             self.page.go("/employee/dashboard")
         except Employee.DoesNotExist:
-            print(f"Employee not found for QR code: {qr_code}")
             self.page.snack_bar = ft.SnackBar(ft.Text("Invalid QR code. Please try again."), open=True)
             self.page.update()
         except Exception as ex:
-            print(f"Error during authentication: {ex}")
             self.page.snack_bar = ft.SnackBar(ft.Text(f"Authentication error: {ex}"), open=True)
             self.page.update()
         finally:

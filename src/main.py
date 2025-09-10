@@ -37,9 +37,6 @@ def main(page: ft.Page):
         elif page.route == "/qr_display":
             page.views.append(QRCodeDisplayView(page=page, employee=page.employee, qr_image_path=page.qr_image_path))
         elif page.route == "/employee/dashboard":
-            print(f"Routing to /employee/dashboard, page.employee: {page.employee}")
-            if page.employee:
-                print(f"Employee: {page.employee.first_name} {page.employee.last_name}")
             page.views.append(UserDashboardView(page=page, employee=page.employee))
         elif page.route == "/employee/profile":
             page.views.append(UserProfileView(page=page, employee=page.employee))
