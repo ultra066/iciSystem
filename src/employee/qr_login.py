@@ -178,7 +178,6 @@ class QRLoginView(ft.View):
                 decoded_objects = decode(image)
                 if decoded_objects:
                     qr_code = decoded_objects[0].data.decode("utf-8")
-                    print(f"Decoded QR code: '{qr_code}'")
                     self.authenticate_qr_code(qr_code)
                 else:
                     self.page.snack_bar = ft.SnackBar(ft.Text("No QR code found in the image."), open=True)

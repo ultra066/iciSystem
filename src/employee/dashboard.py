@@ -21,9 +21,6 @@ class UserDashboardView(ft.View):
         self.page.bgcolor = "#F9F1E0"
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.bgcolor = "#F9F1E0"
-        print(f"UserDashboardView created with employee: {employee}")
-        if employee:
-            print(f"Dashboard for: {employee.first_name} {employee.last_name}")
 
         self.top_nav = EmployeeTopNavigation(self.page)
         self.side_nav = EmployeeNavigation(self.page)
