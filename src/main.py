@@ -7,6 +7,7 @@ from employee.qr_login import QRLoginView
 from employee.create_account import CreateAccountView
 from employee.qr_code_display import QRCodeDisplayView
 from employee.dashboard import UserDashboardView
+from employee.attendance import UserAttendanceView
 from employee.profile import UserProfileView
 from admin.dashboard import AdminDashboardView
 from admin.employees import AdminEmployeesView
@@ -38,6 +39,8 @@ def main(page: ft.Page):
             page.views.append(QRCodeDisplayView(page=page, employee=page.employee, qr_image_path=page.qr_image_path))
         elif page.route == "/employee/dashboard":
             page.views.append(UserDashboardView(page=page, employee=page.employee))
+        elif page.route == "/employee/attendance":
+            page.views.append(UserAttendanceView(page=page, employee=page.employee))
         elif page.route == "/employee/profile":
             page.views.append(UserProfileView(page=page, employee=page.employee))
         
