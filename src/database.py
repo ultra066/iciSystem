@@ -1,7 +1,7 @@
 from peewee import SqliteDatabase
 
 # Create a single database connection object
-db = SqliteDatabase('../attendance_system/attendance.db')
+db = SqliteDatabase('attendance_system/attendance.db')
 
 def initialize_db():
     """
