@@ -1,7 +1,9 @@
+import os
 from peewee import SqliteDatabase
 
 # Create a single database connection object
-db = SqliteDatabase('attendance_system/attendance.db')
+db_path = os.path.join(os.path.dirname(__file__), '..', 'attendance.db')
+db = SqliteDatabase(db_path)
 
 def initialize_db():
     """
