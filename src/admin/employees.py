@@ -68,7 +68,7 @@ class AdminEmployeesView(ft.View):
                         ft.DataCell(ft.Text(emp.department.name)),
                         ft.DataCell(ft.ElevatedButton("View QR", on_click=lambda e, qr_code=emp.qr_code: self.show_qr_code(e, qr_code))),
                         ft.DataCell(ft.Row([
-                            ft.IconButton(ft.Icons.EDIT, tooltip="Edit"),
+                            ft.IconButton(ft.Icons.EDIT, tooltip="Edit", on_click=lambda e, emp_id=emp.id: self.edit_employee(e, emp_id)),
                             ft.IconButton(ft.Icons.DELETE, tooltip="Delete")
                         ])),
                     ]
@@ -82,24 +82,11 @@ class AdminEmployeesView(ft.View):
 
         
     def show_qr_code(self, e, qr_code):
-        qr_path = os.path.join("qr_codes", f"{qr_code}.png")
+        self.page.qr_code = qr_code
+        self.page.go("/admin/employees/view_qr")
 
-        qr_dialog = ft.AlertDialog(
-            modal=True,
-            title=ft.Text("Employee QR Code"),
-            content=ft.Column(
-                [
-                    ft.Text(f"Scan this QR code to log in.", size=16),
-                    ft.Image(src=qr_path, width=250, height=250),
-                    ft.ElevatedButton("Close", on_click=lambda e: self.close_qr_dialog(e))
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER
-            )
-        )
-        self.page.dialog = qr_dialog
-        qr_dialog.open = True
-        self.page.update()
+    def edit_employee(self, e, emp_id):
+        self.page.edit_emp_id = emp_id
+        self.page.go("/admin/employees/edit")
 
-    def close_qr_dialog(self, e):
-        self.page.dialog.open = False
-        self.page.update()
+
