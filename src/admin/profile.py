@@ -66,12 +66,9 @@ class AdminProfileView(ft.View):
                                     ),
                                     
                                     # Name field
-                                    ft.Row(
-                                        [
-                                            ft.Text("Name:", size=18, weight="bold", width=100),
-                                            ft.Text("Admin 0", size=18),
-                                        ],
-                                        alignment=ft.MainAxisAlignment.CENTER
+                                    ft.Container(
+                                        content=ft.Text("Admin 0", size=24, weight="bold"),
+                                        alignment=ft.alignment.center
                                     ),
                                     ft.Divider(height=10, color="transparent"),
                                     

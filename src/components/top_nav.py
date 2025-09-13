@@ -40,12 +40,24 @@ class AdminTopNavigation(ft.Container):
             )
         )
         
+        # Create admin info container
+        self.admin_info = ft.Container(
+            content=ft.Row(
+                [
+                    ft.Icon(name=ft.Icons.ACCOUNT_CIRCLE, color="white", size=30),
+                    ft.Text("Admin 0", size=16, color="white"),
+                ],
+                alignment=ft.MainAxisAlignment.END
+            ),
+            alignment=ft.alignment.center_right
+        )
+
         # Create the navigation container
         self.content = ft.Row(
             controls=[
                 # Logo area
                 self.logo,
-                
+
                 # Navigation buttons positioned in the middle left
                 ft.Container(
                     content=ft.Row(
@@ -53,10 +65,14 @@ class AdminTopNavigation(ft.Container):
                         spacing=20
                     ),
                     margin=ft.margin.only(left=20),  # Adjust this value based on your logo width
-                    alignment=ft.alignment.center_left
-                )
+                    alignment=ft.alignment.center_left,
+                    expand=True
+                ),
+
+                # Admin info on the rightmost part
+                self.admin_info
             ],
-            alignment=ft.MainAxisAlignment.START
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
         )
         
         # Style the navigation container

@@ -94,22 +94,19 @@ def fetch_today_attendance_data():
                                    (Attendance.date == today_date)
                                )
                                .first())
-            
-            if attendance_record:
+
+            if attendance_record and attendance_record.status == 'Present':
                 time_in = attendance_record.time_in.strftime('%I:%M %p') if attendance_record.time_in else 'Not clocked in'
                 time_out = attendance_record.time_out.strftime('%I:%M %p') if attendance_record.time_out else 'Not clocked out'
-            else:
-                time_in = 'Not clocked in'
-                time_out = 'Not clocked out'
-            
-            full_name = f"{employee.first_name} {employee.middle_name + ' ' if employee.middle_name else ''}{employee.last_name}"
-            attendance_data.append({
-                'name': full_name,
-                'initials': employee.initials if employee.initials else get_initials(full_name),
-                'dept': employee.department.name if employee.department else 'N/A',
-                'time_in': time_in,
-                'time_out': time_out
-            })
+
+                full_name = f"{employee.first_name} {employee.middle_name + ' ' if employee.middle_name else ''}{employee.last_name}"
+                attendance_data.append({
+                    'name': full_name,
+                    'initials': employee.initials if employee.initials else get_initials(full_name),
+                    'dept': employee.department.name if employee.department else 'N/A',
+                    'time_in': time_in,
+                    'time_out': time_out
+                })
             
     finally:
         db.close()

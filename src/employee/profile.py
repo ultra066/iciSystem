@@ -22,27 +22,58 @@ class UserProfileView(ft.View):
         self.top_nav = EmployeeTopNavigation(self.page)
         self.side_nav = EmployeeNavigation(self.page)
 
+        # Create a large centered profile icon
+        profile_icon = ft.CircleAvatar(
+            content=ft.Icon(name=ft.Icons.PERSON, size=40, color="white"),
+            radius=60,
+            bgcolor=ft.Colors.DEEP_PURPLE_ACCENT_400
+        )
+
         main_content = ft.Column(
             [
-                ft.Text("My Profile", size=36, weight="bold"),
-                ft.Divider(height=20),
+                ft.Text("Employee Profile", size=36, weight="bold"),
                 ft.Container(
                     content=ft.Column(
                         [
-                            ft.CircleAvatar(
-                                content=ft.Text(self.employee.initials if self.employee.initials else get_initials(f"{self.employee.first_name} {self.employee.middle_name or ''} {self.employee.last_name}"), size=30, weight="bold", color="white"),
-                                radius=50,
-                                bgcolor=ft.Colors.DEEP_PURPLE_ACCENT_400
+                            # Large centered profile icon
+                            ft.Container(
+                                content=profile_icon,
+                                alignment=ft.alignment.center,
+                                padding=ft.padding.only(bottom=20)
                             ),
-                            ft.Text(f"{self.employee.first_name} {self.employee.middle_name + ' ' if self.employee.middle_name else ''}{self.employee.last_name}", size=28, weight="bold"),
-                            ft.Text(f"Employee ID: {self.employee.employee_id}", size=18, color="gray"),
-                            ft.Text(f"Department: {self.employee.department.name}", size=18, color="gray"),
+
+                            # Name field
+                            ft.Container(
+                                content=ft.Text(f"{self.employee.first_name} {self.employee.middle_name + ' ' if self.employee.middle_name else ''}{self.employee.last_name}", size=24, weight="bold"),
+                                alignment=ft.alignment.center
+                            ),
+                            ft.Divider(height=10, color="transparent"),
+
+                            # Initials field
+                            ft.Row(
+                                [
+                                    ft.Text("Initials:", size=18, weight="bold", width=100),
+                                    ft.Text(self.employee.initials if self.employee.initials else get_initials(f"{self.employee.first_name} {self.employee.middle_name or ''} {self.employee.last_name}"), size=18),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER
+                            ),
+                            ft.Divider(height=10, color="transparent"),
+
+                            # Department field
+                            ft.Row(
+                                [
+                                    ft.Text("Department:", size=18, weight="bold", width=100),
+                                    ft.Text(self.employee.department.name, size=18),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER
+                            ),
                         ],
-                        alignment=ft.CrossAxisAlignment.CENTER
+                        alignment=ft.CrossAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
                     ),
-                    padding=ft.padding.all(30),
+                    padding=ft.padding.all(40),
                     border_radius=ft.border_radius.all(20),
-                    bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
+                    bgcolor=ft.Colors.TRANSPARENT,
                     alignment=ft.alignment.center
                 )
             ],
