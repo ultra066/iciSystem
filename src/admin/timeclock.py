@@ -52,13 +52,7 @@ class AdminAttendanceView(ft.View):
                             ],
                             alignment=ft.MainAxisAlignment.CENTER
                         ),
-                        ft.Container(
-                            content=self.data_table,
-                            padding=ft.padding.all(20),
-                            border_radius=ft.border_radius.all(20),
-                            bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.GREY),
-                            alignment=ft.alignment.top_center
-                        )
+                        self.data_table
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
