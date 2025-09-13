@@ -47,7 +47,7 @@ class AdminAttendanceView(ft.View):
                                 ft.ElevatedButton(
                                     "Select Date",
                                     icon=ft.Icons.CALENDAR_MONTH,
-                                    on_click=lambda e: self.date_picker.pick_date(),
+                                    on_click=lambda e: self.page.open(self.date_picker),
                                 )
                             ],
                             alignment=ft.MainAxisAlignment.CENTER
