@@ -12,6 +12,7 @@ from employee.profile import UserProfileView
 from admin.dashboard import AdminDashboardView
 from admin.employees import AdminEmployeesView
 from admin.edit_employee import AdminEditEmployeeView
+from admin.delete_employee import AdminDeleteEmployeeView
 from admin.view_qr import AdminViewQRView
 from admin.login import AdminLoginView
 from admin.profile import AdminProfileView
@@ -55,6 +56,8 @@ def main(page: ft.Page):
             page.views.append(AdminEmployeesView(page=page))
         elif page.route == "/admin/employees/edit":
             page.views.append(AdminEditEmployeeView(page=page, emp_id=page.edit_emp_id))
+        elif page.route == "/admin/employees/delete":
+            page.views.append(AdminDeleteEmployeeView(page=page, emp_id=page.delete_emp_id))
         elif page.route == "/admin/employees/view_qr":
             page.views.append(AdminViewQRView(page=page))
         elif page.route == "/admin/profile":

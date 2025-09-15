@@ -69,7 +69,7 @@ class AdminEmployeesView(ft.View):
                         ft.DataCell(ft.ElevatedButton("View QR", on_click=lambda e, qr_code=emp.qr_code: self.show_qr_code(e, qr_code))),
                         ft.DataCell(ft.Row([
                             ft.IconButton(ft.Icons.EDIT, tooltip="Edit", on_click=lambda e, emp_id=emp.id: self.edit_employee(e, emp_id)),
-                            ft.IconButton(ft.Icons.DELETE, tooltip="Delete")
+                            ft.IconButton(ft.Icons.DELETE, tooltip="Delete", on_click=lambda e, emp_id=emp.id: self.delete_employee(e, emp_id))
                         ])),
                     ]
                 )
@@ -88,5 +88,9 @@ class AdminEmployeesView(ft.View):
     def edit_employee(self, e, emp_id):
         self.page.edit_emp_id = emp_id
         self.page.go("/admin/employees/edit")
+
+    def delete_employee(self, e, emp_id):
+        self.page.delete_emp_id = emp_id
+        self.page.go("/admin/employees/delete")
 
 
