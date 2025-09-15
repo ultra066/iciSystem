@@ -2,6 +2,7 @@ import flet as ft
 from datetime import date, datetime
 from database import db
 from models.attendance import Attendance
+from models.employee import Employee
 from components.admin_layout import AdminLayout
 
 class AdminAttendanceView(ft.View):
@@ -88,7 +89,7 @@ class AdminAttendanceView(ft.View):
         if not db.is_connection_usable():
             db.connect()
         try:
-            query = Attendance.select().where(Attendance.date == self.selected_date)
+            query = Attendance.select().join(Employee).where(Attendance.date == self.selected_date)
             self.all_records = list(query)
             self.populate_table(self.all_records)
         except Exception as ex:

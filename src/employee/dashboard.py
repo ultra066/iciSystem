@@ -28,53 +28,7 @@ class UserDashboardView(ft.View):
         self.status_text = ft.Text(size=24, weight="bold")
         self.time_text = ft.Text(datetime.now().strftime("%H:%M:%S"), size=48, weight="bold")
 
-        # User status dropdown
-        self.current_status = "Active"
-        self.status_dropdown = ft.Dropdown(
-            options=[
-                ft.dropdown.Option(
-                    key="Active",
-                    text="Active",
-                    content=ft.Row([
-                        ft.Container(width=10, height=10, bgcolor=ft.Colors.GREEN, border_radius=5),
-                        ft.Text("Active", size=14)
-                    ], spacing=5)
-                ),
-                ft.dropdown.Option(
-                    key="Absent",
-                    text="Absent",
-                    content=ft.Row([
-                        ft.Container(width=10, height=10, bgcolor=ft.Colors.RED, border_radius=5),
-                        ft.Text("Absent", size=14)
-                    ], spacing=5)
-                ),
-                ft.dropdown.Option(
-                    key="Leave",
-                    text="Leave",
-                    content=ft.Row([
-                        ft.Container(width=10, height=10, bgcolor=ft.Colors.BLUE, border_radius=5),
-                        ft.Text("Leave", size=14)
-                    ], spacing=5)
-                ),
-                ft.dropdown.Option(
-                    key="Off-Site",
-                    text="Off-Site",
-                    content=ft.Row([
-                        ft.Container(width=10, height=10, bgcolor=ft.Colors.ORANGE, border_radius=5),
-                        ft.Text("Off-Site", size=14)
-                    ], spacing=5)
-                ),
-            ],
-            value=self.current_status,
-            on_change=self.handle_status_change,
-            width=200,
-            border=ft.border.all(0, ft.Colors.TRANSPARENT),
-        )
-        # Set initial content for selected value
-        self.status_dropdown.content = ft.Row([
-            ft.Container(width=10, height=10, bgcolor=ft.Colors.GREEN, border_radius=5),
-            ft.Text("Active", size=14)
-        ], spacing=5)
+
 
         # Removed old clock_button since replaced by two buttons
         # self.clock_button = ft.ElevatedButton(
@@ -165,11 +119,6 @@ class UserDashboardView(ft.View):
                     alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     expand=True
-                ),
-                ft.Container(
-                    content=self.status_dropdown,
-                    top=0,
-                    right=0,
                 )
             ],
             expand=True
@@ -283,27 +232,10 @@ class UserDashboardView(ft.View):
             db.close()
             self.page.update()
 
-    def update_dropdown_content(self):
-        color_map = {
-            "Active": ft.Colors.GREEN,
-            "Absent": ft.Colors.RED,
-            "Leave": ft.Colors.BLUE,
-            "Off-Site": ft.Colors.ORANGE,
-        }
-        selected_color = color_map.get(self.current_status, ft.Colors.BLACK)
-        self.status_dropdown.content = ft.Row([
-            ft.Container(width=10, height=10, bgcolor=selected_color, border_radius=5),
-            ft.Text(self.current_status, size=14)
-        ], spacing=5)
-        self.status_dropdown.update()
 
-    def handle_status_change(self, e):
-        self.current_status = e.control.value
-        self.update_dropdown_content()
-        # TODO: Add logic to update user status in database or session
-        print(f"User status changed to: {self.current_status}")
+
+
 
     def did_mount(self):
         self.update_status()
-        self.update_dropdown_content()
 

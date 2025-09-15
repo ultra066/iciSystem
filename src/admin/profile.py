@@ -129,7 +129,8 @@ class AdminProfileView(ft.View):
         ]
     
     def get_admin_user(self):
-        db.connect()
+        if db.is_closed():
+            db.connect()
         try:
             return Admin.get(Admin.id == 1) # Assuming a single admin with ID 1
         except Admin.DoesNotExist:
@@ -157,7 +158,8 @@ class AdminProfileView(ft.View):
             self.page.update()
             return
 
-        db.connect()
+        if db.is_closed():
+            db.connect()
         try:
             admin_record = Admin.get(Admin.id == 1)
             admin_record.username = new_username
