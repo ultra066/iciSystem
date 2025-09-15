@@ -5,6 +5,7 @@ from pyzbar.pyzbar import decode
 from PIL import Image
 import io
 import base64
+import cv2
 
 class QRLoginView(ft.View):
     """
@@ -159,8 +160,50 @@ class QRLoginView(ft.View):
         ]
 
     def handle_scan_click(self, e):
-        # Handle QR code scanning
-        self.page.snack_bar = ft.SnackBar(ft.Text("Scan QR code functionality would be implemented here."), open=True)
+        # Handle QR code scanning using OpenCV and device camera with live display in Flet
+        import threading
+        import base64
+
+        camera_image = ft.Image(width=400, height=300)
+        scan_dialog = ft.AlertDialog(
+            title=ft.Text("Scan QR Code"),
+            content=ft.Column([camera_image, ft.ElevatedButton("Close", on_click=lambda e: self.close_scan_dialog(scan_dialog))]),
+            actions=[],
+            modal=True,
+        )
+        self.page.dialog = scan_dialog
+        scan_dialog.open = True
+        self.page.update()
+
+        def update_camera_feed():
+            cap = cv2.VideoCapture(0)
+            while scan_dialog.open:
+                ret, frame = cap.read()
+                if not ret:
+                    continue
+                # Check for QR code
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                decoded_objects = decode(gray)
+                if decoded_objects:
+                    qr_code = decoded_objects[0].data.decode("utf-8")
+                    cap.release()
+                    scan_dialog.open = False
+                    self.page.snack_bar = ft.SnackBar(ft.Text(f"QR Code detected: {qr_code}"), open=True)
+                    self.page.update()
+                    self.authenticate_qr_code(qr_code)
+                    break
+                # Encode frame to base64 for Flet Image
+                _, buffer = cv2.imencode('.png', frame)
+                img_base64 = base64.b64encode(buffer).decode('utf-8')
+                camera_image.src_base64 = img_base64
+                self.page.update()
+                cv2.waitKey(30)  # Small delay
+            cap.release()
+
+        threading.Thread(target=update_camera_feed, daemon=True).start()
+
+    def close_scan_dialog(self, dialog):
+        dialog.open = False
         self.page.update()
 
     def handle_upload_click(self, e):

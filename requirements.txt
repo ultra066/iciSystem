@@ -5,3 +5,4 @@ pyzbar
 peewee
 bcrypt
 pillow
+opencv-python
