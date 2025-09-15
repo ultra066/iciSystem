@@ -52,7 +52,13 @@ class AdminAttendanceView(ft.View):
                             ],
                             alignment=ft.MainAxisAlignment.CENTER
                         ),
-                        self.data_table
+                        ft.Container(
+                            content=ft.ListView(
+                                [self.data_table],
+                                height=400,
+                                auto_scroll=True,
+                            ),
+                        )
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,

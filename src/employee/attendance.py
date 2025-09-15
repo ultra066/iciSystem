@@ -46,7 +46,8 @@ class UserAttendanceView(ft.View):
                 ft.Container(height=20),  # Spacer
                 ft.Container(
                     content=self.attendance_table,
-                    expand=True
+                    height=400,
+                    scroll="auto",
                 )
             ],
             alignment=ft.MainAxisAlignment.START,

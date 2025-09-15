@@ -26,7 +26,13 @@ class AdminEmployeesView(ft.View):
                         AdminHeader("EMPLOYEES"),
                         ft.Divider(height=20),
                         ft.TextField(hint_text="Search Employee", expand=True),
-                        self.employees_table,
+                        ft.Container(
+                            content=ft.ListView(
+                                [self.employees_table],
+                                height=400,
+                                auto_scroll=True,
+                            ),
+                        ),
                     ],
                     expand=True,
                 )

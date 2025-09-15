@@ -28,7 +28,13 @@ class AdminAttendanceView(ft.View):
                                 AdminHeader("Attendance Records"),
                                 ft.Divider(height=20),
                                 ft.TextField(hint_text="Search by Name or Date", expand=True),
-                                self.create_attendance_table(),
+                                ft.Container(
+                                    content=ft.ListView(
+                                        [self.create_attendance_table()],
+                                        height=400,
+                                        auto_scroll=True,
+                                    ),
+                                ),
                             ],
                             expand=True,
                         ),

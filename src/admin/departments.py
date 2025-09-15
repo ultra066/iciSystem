@@ -35,7 +35,13 @@ class AdminDepartmentsView(ft.View):
                                     ],
                                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                                 ),
-                                self.create_departments_table(),
+                                ft.Container(
+                                    content=ft.ListView(
+                                        [self.create_departments_table()],
+                                        height=400,
+                                        auto_scroll=True,
+                                    ),
+                                ),
                             ],
                             expand=True,
                         ),
