@@ -94,13 +94,13 @@ class TodayAttendance(ft.Container):
             filtered_data = self.attendance_data
             
         self.data_table.rows = self.create_table_rows(filtered_data)
-        # Don't call self.update() here as it may cause issues before component is added to page
+        self.update()
     
     def update_attendance_data(self, new_data):
         """Update the attendance data with new records"""
         self.attendance_data = new_data
         self.data_table.rows = self.create_table_rows(self.attendance_data)
-        # Don't call self.update() here as the component may not be added to page yet
+        self.update()
 
 # Example usage in a dashboard
 def main(page: ft.Page):
